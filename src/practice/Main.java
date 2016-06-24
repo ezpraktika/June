@@ -5,5 +5,6 @@ public class Main {
         System.out.println("hello");
         System.out.println("eyey");
         System.out.println("SEREJA MLG");
+        System.out.println("SEREJA MLG tochno");
     }
 }
