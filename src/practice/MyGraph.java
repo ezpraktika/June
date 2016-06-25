@@ -28,6 +28,7 @@ public class MyGraph {
     public void initGraph(int n) {
         isVisited = new boolean[n];
         history = new ArrayList<Integer>(n);
+        history.ensureCapacity(n);
         adjLists = new ArrayList<ArrayList<Integer>>();
 
         for(int v=0; v<n; v++){
@@ -43,8 +44,8 @@ public class MyGraph {
         return adjLists;
     }
 
-
-
-
+    public ArrayList<Integer> getHistory() {
+        return history;
+    }
 }
 
