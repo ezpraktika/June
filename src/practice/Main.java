@@ -1,7 +1,11 @@
 package practice;
 
-public class DFS {
+public class Main {
+
+
     public static void main(String[] args) {
 
     }
+
+
 }
