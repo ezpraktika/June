@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class MyGraph {
     private  boolean isVisited[];                     //массив посещенных
     private ArrayList<Integer> history;             //порядок посещения
+
     private ArrayList<ArrayList<Integer>> adjLists; //список смежности
 
     public MyGraph(int n) {
@@ -37,6 +38,12 @@ public class MyGraph {
     public void createEdge(int from, int to) {
         adjLists.get(from).add(to);
     }
+
+    public ArrayList<ArrayList<Integer>> getAdjLists() {
+        return adjLists;
+    }
+
+
 
 
 }
