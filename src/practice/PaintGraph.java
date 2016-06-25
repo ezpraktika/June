@@ -25,7 +25,7 @@ public class PaintGraph extends JPanel{
             points[i] = graph.insertVertex(parent, null, i+1, 400 + r * Math.cos(phi0), 400 + r * Math.sin(phi0), 20, 20);
             phi0 += phi;
         }
-
+            /////f/qfqfq
 //        for(int i = 0; i < adjacencyList.size(); i++){
 //            for(int j = 0; j < adjacencyList[i].)
 //        }
