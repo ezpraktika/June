@@ -70,6 +70,12 @@ public class PaintGraph extends JPanel{
         frame.add(paintGraph);
         frame.setSize(900,900);
         frame.setVisible(true);
+        System.out.println("");
+
+        for (int w: g.getUsed()
+             ) {
+            System.out.print(w+" ");
+        }
 
     }
 }
