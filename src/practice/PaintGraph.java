@@ -45,7 +45,7 @@ public class PaintGraph extends JPanel {
 
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         this.add(graphComponent);
-        repaint();
+        this.revalidate();
     }
     public static void main(String[] args) {
 
