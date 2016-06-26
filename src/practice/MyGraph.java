@@ -4,6 +4,8 @@ import javafx.util.Pair;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class MyGraph {
     private ArrayList<ArrayList<Integer>> adjLists; //список смежности
@@ -44,10 +46,18 @@ public class MyGraph {
     }
 
     public void startDfs(){
+        for(int i =0;i<adjLists.size();i++){
+            Collections.sort(adjLists.get(i));
+        }
+        printList();
         for (int i = 0; i < adjLists.size(); i++) {
             if(!isVisited[i]){
                 dfs(i);
             }
+        }
+        System.out.print("\nDFS: ");
+        for (int i = 0; i < history.size(); i++) {
+            System.out.print(history.indexOf(i)+" ");
         }
     }
 
@@ -114,6 +124,16 @@ public class MyGraph {
 
     public ArrayList<Integer> getUsed() {
         return used;
+    }
+
+    public void printList(){
+        for (int i = 0; i < adjLists.size(); i++) {
+            System.out.print(i+": ");
+            for (int j = 0; j < adjLists.get(i).size(); j++) {
+                System.out.print(adjLists.get(i).get(j)+" ");
+            }
+            System.out.println("");
+        }
     }
 }
 

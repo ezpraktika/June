@@ -33,11 +33,11 @@ public class Main {
         /*
          * Кнопки с первой страницы
          */
-        final JButton first = new JButton("ok");            //ввести кол-во вершин
-        final JButton second = new JButton("ok");           //ввести ребро
-        final JButton third = new JButton("Import data");   //ввод данных из файла
-        final JButton fourth = new JButton("Start");        //начать алгоритм
-        final JButton fifth = new JButton("Show result");   //сразу показать результат
+        final JButton numOfVertexButton = new JButton("ok");            //ввести кол-во вершин
+        final JButton createEdgeButton = new JButton("ok");           //ввести ребро
+        final JButton importDateButton = new JButton("Import data");   //ввод данных из файла
+        final JButton startButton = new JButton("Start");        //начать алгоритм
+        final JButton showResultsButton = new JButton("Show result");   //сразу показать результат
 
         /*
          * Панель графа (первая страница)
@@ -53,11 +53,11 @@ public class Main {
         numLine.setLayout(new BoxLayout(numLine,BoxLayout.LINE_AXIS));
 
         final JTextField number = new JTextField();
-        first.addActionListener(new ActionListener() {
+        numOfVertexButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int nu=Integer.parseInt(number.getText());
-                second.setEnabled(true);
+                createEdgeButton.setEnabled(true);
                 g=new MyGraph(nu);
             }
         });
@@ -65,7 +65,7 @@ public class Main {
         numLine.add(Box.createHorizontalStrut(4));
         numLine.add(number);
         numLine.add(Box.createHorizontalStrut(4));
-        numLine.add(first);
+        numLine.add(numOfVertexButton);
 
         /*
          * Панель, отвечающая за ввод ребер
@@ -75,13 +75,41 @@ public class Main {
         final JTextField vert1 = new JTextField();
         final JTextField vert2 = new JTextField();
 
-        second.addActionListener(new ActionListener() {
+        createEdgeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+//
                 int e1=Integer.parseInt(vert1.getText());
                 int e2=Integer.parseInt(vert2.getText());
+                vert1.setText("");
+                vert2.setText("");
                 System.out.println(e1+" "+e2);
-                g.createEdge(e1,e2);
+                g.createEdge(e1-1,e2-1);
+//                g.createEdge(0,1);
+//                g.createEdge(0,2);
+//                g.createEdge(0,3);
+//                g.createEdge(0,5);
+//                g.createEdge(0,6);
+//
+//                g.createEdge(2,3);
+//
+//                g.createEdge(3,4);
+//                g.createEdge(3,5);
+//
+//                g.createEdge(4,9);
+//
+//                g.createEdge(6,4);
+//                g.createEdge(6,9);
+//
+//                g.createEdge(7,6);
+//
+//                g.createEdge(8,7);
+//
+//                g.createEdge(9,10);
+//                g.createEdge(9,11);
+//                g.createEdge(9,12);
+//
+//                g.createEdge(11,12);
             }
         });
 
@@ -91,7 +119,7 @@ public class Main {
         edgeLine.add(Box.createHorizontalStrut(4));
         edgeLine.add(vert2);
         edgeLine.add(Box.createHorizontalStrut(4));
-        edgeLine.add(second);
+        edgeLine.add(createEdgeButton);
 
         /*
          * Правая верхняя панель со всем интерфейсом
@@ -100,9 +128,9 @@ public class Main {
         rightUpPanel.setLayout(new GridLayout(5,1,0,3));
         rightUpPanel.add(numLine);
         rightUpPanel.add(edgeLine);
-        rightUpPanel.add(third);
-        rightUpPanel.add(fourth);
-        rightUpPanel.add(fifth);
+        rightUpPanel.add(importDateButton);
+        rightUpPanel.add(startButton);
+        rightUpPanel.add(showResultsButton);
         rightUpPanel.setPreferredSize(new Dimension(200,300));
 
         /*
@@ -171,14 +199,14 @@ public class Main {
         /*
          * ActionListener'ы для кнопок с первой страницы
          */
-        third.addActionListener(new ActionListener() {
+        importDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("DOESN'T WORK");
             }
         });
 
-        fourth.addActionListener(new ActionListener() {
+        startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 g.startDfs();
@@ -196,7 +224,7 @@ public class Main {
             }
         });
 
-        fifth.addActionListener(new ActionListener() {
+        showResultsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("DOESN'T WORK");
