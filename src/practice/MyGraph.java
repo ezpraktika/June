@@ -1,8 +1,10 @@
 package practice;
 
+import com.mxgraph.view.mxGraph;
 import javafx.util.Pair;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.html.ObjectView;
 import java.util.ArrayList;
 
 public class MyGraph {
@@ -12,6 +14,29 @@ public class MyGraph {
     private ArrayList<Integer> history;             //порядок посещения
     private ArrayList<Integer> used;                //порядок использования
     private int[] renumbered;                       //перенумированы
+
+    public mxGraph getMyGraph() {
+        return myGraph;
+    }
+
+    public void setMyGraph(mxGraph myGraph) {
+        this.myGraph = myGraph;
+    }
+
+    private mxGraph myGraph;
+
+    public Object[] getPoints() {
+        return points;
+    }
+
+    public void setPoints(Object[] points) {
+        this.points = points;
+    }
+
+    private Object[] points;
+
+
+
     private int[] topSorted;                        //отсортированы
 
     private Integer[][] data;   //массив данных таблицы (состоит из 4х предыдущих массивов)
@@ -114,6 +139,10 @@ public class MyGraph {
 
     public ArrayList<Integer> getUsed() {
         return used;
+    }
+
+    public int[] getTopSorted() {
+        return topSorted;
     }
 }
 
