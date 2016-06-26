@@ -4,8 +4,8 @@ import com.mxgraph.view.mxGraph;
 import javafx.util.Pair;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.text.html.ObjectView;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MyGraph {
     private ArrayList<ArrayList<Integer>> adjLists; //список смежности
@@ -14,34 +14,13 @@ public class MyGraph {
     private ArrayList<Integer> history;             //порядок посещения
     private ArrayList<Integer> used;                //порядок использования
     private int[] renumbered;                       //перенумированы
-
-    public mxGraph getMyGraph() {
-        return myGraph;
-    }
-
-    public void setMyGraph(mxGraph myGraph) {
-        this.myGraph = myGraph;
-    }
-
-    private mxGraph myGraph;
-
-    public Object[] getPoints() {
-        return points;
-    }
-
-    public void setPoints(Object[] points) {
-        this.points = points;
-    }
-
-    private Object[] points;
-
-
-
     private int[] topSorted;                        //отсортированы
 
     private Integer[][] data;   //массив данных таблицы (состоит из 4х предыдущих массивов)
 
     private ArrayList<Pair<Integer,Integer>> edgesDfs;
+    private mxGraph myGraph;
+    private Object[] points;
 
     public MyGraph(int n) {
         initGraph(n);
@@ -70,9 +49,17 @@ public class MyGraph {
 
     public void startDfs(){
         for (int i = 0; i < adjLists.size(); i++) {
+            Collections.sort(adjLists.get(i));
+        }
+        printList();
+        for (int i = 0; i < adjLists.size(); i++) {
             if(!isVisited[i]){
                 dfs(i);
             }
+        }
+        System.out.print("\nDFS: ");
+        for (int i = 0; i < history.size(); i++) {
+            System.out.print(history.indexOf(i) + " ");
         }
     }
 
@@ -121,8 +108,17 @@ public class MyGraph {
         for (int i = 0; i < adjLists.size(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
-
         return table;
+    }
+
+    public void printList() {
+        for (int i = 0; i < adjLists.size(); i++) {
+            System.out.print(i + ": ");
+            for (int j = 0; j < adjLists.get(i).size(); j++) {
+                System.out.print(adjLists.get(i).get(j) + " ");
+            }
+            System.out.println("");
+        }
     }
 
     public ArrayList<ArrayList<Integer>> getAdjLists() {
@@ -143,6 +139,23 @@ public class MyGraph {
 
     public int[] getTopSorted() {
         return topSorted;
+    }
+
+    public mxGraph getMyGraph() {
+        return myGraph;
+    }
+
+
+    public Object[] getPoints() {
+        return points;
+    }
+
+    public void setMyGraph(mxGraph myGraph) {
+        this.myGraph = myGraph;
+    }
+
+    public void setPoints(Object[] points) {
+        this.points = points;
     }
 }
 
