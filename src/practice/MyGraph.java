@@ -1,45 +1,46 @@
 package practice;
 
-
 import javafx.util.Pair;
-
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.util.ArrayList;
 
-
 public class MyGraph {
-    private  boolean isVisited[];                     //массив посещенных
+    private ArrayList<ArrayList<Integer>> adjLists; //список смежности
+    private  boolean isVisited[];                   //массив посещенных
+
     private ArrayList<Integer> history;             //порядок посещения
     private ArrayList<Integer> used;                //порядок использования
     private int[] renumbered;                       //перенумированы
     private int[] topSorted;                        //отсортированы
-    private ArrayList<ArrayList<Integer>> adjLists; //список смежности
-    private Integer[][] data;
-    private ArrayList<Pair<Integer,Integer>> edgesDfs;
 
+    private Integer[][] data;   //массив данных таблицы (состоит из 4х предыдущих массивов)
+
+    private ArrayList<Pair<Integer,Integer>> edgesDfs;
 
     public MyGraph(int n) {
         initGraph(n);
     }
 
+    public void initGraph(int n) {
+        isVisited = new boolean[n];
+        history = new ArrayList<Integer>(n);
+        used = new ArrayList<Integer>(n);
+        renumbered = new int[n];
+        topSorted = new int[n];
+        adjLists = new ArrayList<ArrayList<Integer>>();
+        data=new Integer[4][n];
+        edgesDfs = new ArrayList<Pair<Integer, Integer>>();
 
-    public ArrayList<Pair<Integer, Integer>> getEdgesDfs() {
-        return edgesDfs;
+        for(int v=0; v<n; v++){
+            adjLists.add(new ArrayList<Integer>());
+        }
+
+        System.out.println("init, size: "+adjLists.size());
     }
 
-    public void dfs(int v){
-        isVisited[v] = true;
-        history.add(v);
-        System.out.print(v + " ");
-        for(int w : adjLists.get(v)){
-            if(!isVisited[w]){
-                edgesDfs.add(new Pair(v,w));
-                dfs(w);
-            }
-        }
-        used.add(v);
-
+    public void createEdge(int from, int to) {
+        adjLists.get(from).add(to);
     }
 
     public void startDfs(){
@@ -50,29 +51,61 @@ public class MyGraph {
         }
     }
 
-    public void initGraph(int n) {
-        isVisited = new boolean[n];
-        history = new ArrayList<Integer>(n);
-        used = new ArrayList<Integer>(n);
-        renumbered = new int[n];
-        topSorted = new int[n];
-        adjLists = new ArrayList<ArrayList<Integer>>();
-        data=new Integer[5][n];
-        edgesDfs = new ArrayList<Pair<Integer, Integer>>();
-
-
-        for(int v=0; v<n; v++){
-            adjLists.add(new ArrayList<Integer>());
+    public void dfs(int v){
+        isVisited[v] = true;
+        history.add(v);
+        for(int w : adjLists.get(v)){
+            if(!isVisited[w]){
+                edgesDfs.add(new Pair(v,w));
+                dfs(w);
+            }
         }
-        System.out.println("init, size: "+adjLists.size());
+        used.add(v);
     }
 
-    public void createEdge(int from, int to) {
-        adjLists.get(from).add(to);
+    public void topSorting(){
+
+        for (int i = 0; i < adjLists.size(); i++) {
+            data[0][i]=history.indexOf(i)+1;
+            data[1][i]=used.indexOf(i)+1;
+            renumbered[i]=adjLists.size()-used.indexOf(i)-1;
+            data[2][i]=renumbered[i]+1;
+        }
+
+        for (int i = 0; i < adjLists.size(); i++) {
+            topSorted[renumbered[i]]=i;
+            data[3][renumbered[i]]=i+1;
+        }
+
+    }
+
+    public JTable makeJTable(){
+        //массив заголовков (номера вершин)
+        Integer[] help=new Integer[adjLists.size()];
+        for (int i = 0; i < adjLists.size(); i++) {
+            help[i]=i+1;
+        }
+
+        //для центрирования
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JTable table=new JTable(data,help);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setRowHeight(40);
+        for (int i = 0; i < adjLists.size(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        return table;
     }
 
     public ArrayList<ArrayList<Integer>> getAdjLists() {
         return adjLists;
+    }
+
+    public ArrayList<Pair<Integer, Integer>> getEdgesDfs() {
+        return edgesDfs;
     }
 
     public ArrayList<Integer> getHistory() {
@@ -82,49 +115,5 @@ public class MyGraph {
     public ArrayList<Integer> getUsed() {
         return used;
     }
-
-    public void topSorting(){
-        System.out.println("");
-        for (int i=0; i<adjLists.size();i++) {
-            System.out.print(used.indexOf(i)+" ");
-            data[2][i]=used.indexOf(i)+1;
-        }
-
-        for (int i = 0; i < adjLists.size(); i++) {
-            renumbered[i]=adjLists.size()-used.indexOf(i)-1;
-            data[3][i]=renumbered[i]+1;
-        }
-        for (int i = 0; i < adjLists.size(); i++) {
-            topSorted[renumbered[i]]=i;
-            data[4][renumbered[i]]=i+1;
-        }
-        System.out.println("");
-        for (int v :
-                renumbered) {
-            System.out.print(v+ " ");
-        }
-        System.out.println("");
-        for (int v :
-                topSorted) {
-            System.out.print(v+ " ");
-        }
-    }
-
-    public JTable makeJTable(){
-        //useless shit
-//        String[] headers = {
-//                "v", "nv","fn","sn","tn"
-//        };
-//        Integer[] help=new Integer[adjLists.size()];
-//        for (int i = 0; i < adjLists.size(); i++) {
-//            help[i]=i+1;
-//        }
-//
-//
-//        JTable table=new JTable(data,help);
-//        table.setPreferredSize(new Dimension(10000,600));
-//        return table;
-    }
-
 }
 
