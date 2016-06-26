@@ -12,9 +12,6 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-/**
- * Created by n on 25.06.2016.
- */
 public class PaintGraph extends JPanel {
 
     public PaintGraph() {
@@ -137,41 +134,41 @@ public class PaintGraph extends JPanel {
     }
 
 
-    public static void main(String[] args) {
-
-        MyGraph g = new MyGraph(7);
-
-        g.createEdge(0, 1);
-        g.createEdge(0, 2);
-        g.createEdge(0, 3);
-
-        g.createEdge(1, 5);
-        g.createEdge(1, 6);
-
-        g.createEdge(2, 4);
-
-        g.createEdge(3, 2);
-        g.createEdge(3, 4);
-
-        g.createEdge(4, 1);
-
-        g.createEdge(6, 4);
-
-        g.dfs(0);
-
-        PaintGraph paintGraph = new PaintGraph();
-        JFrame frame = new JFrame();
-        frame.add(paintGraph);
-        frame.setSize(900, 900);
-        frame.setVisible(true);
-        System.out.println();
-        paintGraph.drawGraph(g);
-        try {
-            Thread.sleep(2000);                 //1000 milliseconds is one second.
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-        paintGraph.drawGraphDfsWithSteps(g);
-
-    }
+//    public static void main(String[] args) {
+//
+//        MyGraph g = new MyGraph(7);
+//
+//        g.createEdge(0, 1);
+//        g.createEdge(0, 2);
+//        g.createEdge(0, 3);
+//
+//        g.createEdge(1, 5);
+//        g.createEdge(1, 6);
+//
+//        g.createEdge(2, 4);
+//
+//        g.createEdge(3, 2);
+//        g.createEdge(3, 4);
+//
+//        g.createEdge(4, 1);
+//
+//        g.createEdge(6, 4);
+//
+//        g.dfs(0);
+//
+//        PaintGraph paintGraph = new PaintGraph();
+//        JFrame frame = new JFrame();
+//        frame.add(paintGraph);
+//        frame.setSize(900, 900);
+//        frame.setVisible(true);
+//        System.out.println();
+//        paintGraph.drawGraph(g);
+//        try {
+//            Thread.sleep(2000);                 //1000 milliseconds is one second.
+//        } catch (InterruptedException ex) {
+//            Thread.currentThread().interrupt();
+//        }
+//        paintGraph.drawGraphDfsWithSteps(g);
+//
+//    }
 }
