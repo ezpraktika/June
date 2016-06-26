@@ -80,38 +80,38 @@ public class Main {
         createEdgeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int e1 = Integer.parseInt(vert1.getText());
-                int e2 = Integer.parseInt(vert2.getText());
-                vert1.setText("");
-                vert2.setText("");
-                System.out.println(e1 + " " + e2);
-                g.createEdge(e1-1, e2-1);
+//                int e1 = Integer.parseInt(vert1.getText());
+//                int e2 = Integer.parseInt(vert2.getText());
+//                vert1.setText("");
+//                vert2.setText("");
+//                System.out.println(e1 + " " + e2);
+//                g.createEdge(e1-1, e2-1);
 
-//                g.createEdge(0, 1);
-//                g.createEdge(0, 2);
-//                g.createEdge(0, 3);
-//                g.createEdge(0, 5);
-//                g.createEdge(0, 6);
-//
-//                g.createEdge(2, 3);
-//
-//                g.createEdge(3, 4);
-//                g.createEdge(3, 5);
-//
-//                g.createEdge(4, 9);
-//
-//                g.createEdge(6, 4);
-//                g.createEdge(6, 9);
-//
-//                g.createEdge(7, 6);
-//
-//                g.createEdge(8, 7);
-//
-//                g.createEdge(9, 10);
-//                g.createEdge(9, 11);
-//                g.createEdge(9, 12);
-//
-//                g.createEdge(11, 12);
+                g.createEdge(0, 1);
+                g.createEdge(0, 2);
+                g.createEdge(0, 3);
+                g.createEdge(0, 5);
+                g.createEdge(0, 6);
+
+                g.createEdge(2, 3);
+
+                g.createEdge(3, 4);
+                g.createEdge(3, 5);
+
+                g.createEdge(4, 9);
+
+                g.createEdge(6, 4);
+                g.createEdge(6, 9);
+
+                g.createEdge(7, 6);
+
+                g.createEdge(8, 7);
+
+                g.createEdge(9, 10);
+                g.createEdge(9, 11);
+                g.createEdge(9, 12);
+
+                g.createEdge(11, 12);
             }
         });
 
@@ -214,7 +214,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 g.startDfs();
-                pg.drawGraph(g);
+//                pg.drawGraph(g);
                 g.topSorting();
                 pg.drawGraphDfsWithSteps(g);
 

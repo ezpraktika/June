@@ -22,7 +22,7 @@ public class PaintGraph extends JPanel {
         this.stepNumber = stepNumber;
     }
 
-    private int stepNumber = -1;
+    private int stepNumber = 0;
 
     public PaintGraph() {
 
@@ -117,7 +117,7 @@ public class PaintGraph extends JPanel {
         int r = 290;
 
         for (int i = 0; i < points.length; i++) {
-            points[i] = graph.insertVertex(parent, null, i, 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;strokeColor=green;fillColor=white");
+            points[i] = graph.insertVertex(parent, null, i + 1, 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;strokeColor=green;fillColor=white");
             phi0 += phi;
         }
 
@@ -140,23 +140,34 @@ public class PaintGraph extends JPanel {
 //            graph.insertEdge(parent, null, null, points[edgesDfs.get(i).getKey()], points[edgesDfs.get(i).getValue()], "strokeColor=red");
 //            this.revalidate();
 //        }
+        this.revalidate();
 
     }
 
-    public void drawStep(MyGraph g){
+    public void drawStep(MyGraph g) {
 
         ArrayList<Integer> history = g.getHistory();
         ArrayList<Pair<Integer, Integer>> edgesDfs = g.getEdgesDfs();
         Object parent = g.getMyGraph().getDefaultParent();
         mxGraph graph = g.getMyGraph();
         graph.getModel().beginUpdate();
-        if (stepNumber == -1){
-            graph.getModel().setValue(g.getPoints()[history.get(stepNumber+1)],graph.getModel().getValue(g.getPoints()[history.get(stepNumber+1)]).toString() + "(" + (stepNumber+2) + ")");
-        }
+        if (stepNumber == 0) {
+            graph.getModel().setValue(g.getPoints()[history.get(0)], graph.getModel().getValue(g.getPoints()[history.get(0)]).toString() + "(1)");
+        } else {
+//            if (edgesDfs.contains(new Pair<Integer, Integer>(history.get(stepNumber), history.get(stepNumber + 1)))) {
+//                graph.insertEdge(parent, null, null, g.getPoints()[history.get(stepNumber)], g.getPoints()[history.get(stepNumber+1)], "strokeColor=red");
+////                graph.insertEdge(parent, null, null, g.getPoints()[edgesDfs.get(stepNumber).getKey()], g.getPoints()[edgesDfs.get(stepNumber).getValue()], "strokeColor=red");
+//            }
 
-        else{
-            graph.insertEdge(parent, null, null, g.getPoints()[edgesDfs.get(stepNumber).getKey()], g.getPoints()[edgesDfs.get(stepNumber).getValue()], "strokeColor=red");
-            graph.getModel().setValue(g.getPoints()[history.get(stepNumber+1)],graph.getModel().getValue(g.getPoints()[history.get(stepNumber+1)]).toString() + "(" + (stepNumber+2) + ")");
+            for (int i = 0; i < history.get(stepNumber); i++) {
+                if (edgesDfs.contains(new Pair<Integer, Integer>(i, history.get(stepNumber)))) {
+//                    graph.getModel().setStyle(graph.getEdgesBetween(g.getPoints()[i],g.getPoints()[stepNumber]),"strokeColor=red");
+                    graph.insertEdge(parent, null, null, g.getPoints()[i], g.getPoints()[history.get(stepNumber)], "strokeColor=red");
+                    break;
+                }
+            }
+
+            graph.getModel().setValue(g.getPoints()[history.get(stepNumber)], graph.getModel().getValue(g.getPoints()[history.get(stepNumber)]).toString() + "(" + (stepNumber + 1) + ")");
         }
 
         graph.getModel().endUpdate();
