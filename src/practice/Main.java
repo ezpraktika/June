@@ -36,7 +36,7 @@ public class Main {
         final JButton numOfVertexButton = new JButton("ok");            //ввести кол-во вершин
         final JButton createEdgeButton = new JButton("ok");           //ввести ребро
         final JButton importDateButton = new JButton("Import data");   //ввод данных из файла
-        final JButton startButton = new JButton("Start");        //начать алгоритм
+        final JButton startButton = new JButton("Make graph");        //начать алгоритм
         final JButton showResultsButton = new JButton("Show result");   //сразу показать результат
 
         /*
@@ -132,6 +132,7 @@ public class Main {
         rightUpPanel.add(startButton);
         rightUpPanel.add(showResultsButton);
         rightUpPanel.setPreferredSize(new Dimension(200,300));
+
 
         /*
          * Правая панель целиком
