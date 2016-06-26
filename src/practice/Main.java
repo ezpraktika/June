@@ -239,6 +239,7 @@ public class Main {
                     case Sorting:
 
                         g.topSorting();
+                        pg.drawSortedGraph(g);
                         final JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
                                 ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
                                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);

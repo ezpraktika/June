@@ -14,7 +14,7 @@ public class MyGraph {
     private ArrayList<Integer> history;             //порядок посещения
     private ArrayList<Integer> used;                //порядок использования
     private int[] renumbered;                       //перенумированы
-    private int[] topSorted;                        //отсортированы
+    private ArrayList<Integer> topSorted;                        //отсортированы
 
     private Integer[][] data;   //массив данных таблицы (состоит из 4х предыдущих массивов)
 
@@ -31,7 +31,8 @@ public class MyGraph {
         history = new ArrayList<Integer>(n);
         used = new ArrayList<Integer>(n);
         renumbered = new int[n];
-        topSorted = new int[n];
+        topSorted = new ArrayList<Integer>(n);
+        for(int i = 0; i < n; i++) topSorted.add(0);
         adjLists = new ArrayList<ArrayList<Integer>>();
         data=new Integer[4][n];
         edgesDfs = new ArrayList<Pair<Integer, Integer>>();
@@ -85,7 +86,7 @@ public class MyGraph {
         }
 
         for (int i = 0; i < adjLists.size(); i++) {
-            topSorted[renumbered[i]]=i;
+            topSorted.set(renumbered[i],i);
             data[3][renumbered[i]]=i+1;
         }
 
@@ -137,7 +138,7 @@ public class MyGraph {
         return used;
     }
 
-    public int[] getTopSorted() {
+    public ArrayList<Integer> getTopSorted() {
         return topSorted;
     }
 
