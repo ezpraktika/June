@@ -10,6 +10,10 @@ public class Main {
 
     private static MyGraph g;
     private static PaintGraph pg;
+    private static State state;
+    enum State{
+        Making, Searching, Sorting
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -20,6 +24,7 @@ public class Main {
     }
 
     private static void createAndShowGUI() {
+        state=State.Making;
 
         final JFrame f = new JFrame("Topological sort");
         JTabbedPane tp = new JTabbedPane();         //окно состоит из 2х вкладок
@@ -213,20 +218,41 @@ public class Main {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                g.startDfs();
-//                pg.drawGraph(g);
-                g.topSorting();
-                pg.drawGraphDfsWithSteps(g);
+                switch (Main.state){
+                    case Making:
+                        pg.drawGraphDfsWithSteps(g);
+                        startButton.setText("Start DFS");
+                        state=State.Searching;
+                        g.startDfs();
+                        break;
 
-                final JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
-                        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-                scrollPane.setPreferredSize(new Dimension(750, 200));
-                scrollPane.setColumnHeader(null);
-                secondUpPanel.add(headers, BorderLayout.WEST);
-                secondUpPanel.add(scrollPane, BorderLayout.CENTER);
-                secondPanel.add(secondUpPanel);
-                secondPanel.add(Box.createVerticalStrut(450));
+                    case Searching:
+                        if(pg.getStepNumber()==0){
+                            startButton.setText("Next step");
+                        }
+                        pg.drawStep(g);
+                        if(pg.getStepNumber()>=g.getAdjLists().size()){
+                            startButton.setText("Sort");
+                            state=State.Sorting;
+                        }
+                        break;
+                    case Sorting:
+
+                        g.topSorting();
+                        final JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
+                                ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+                        scrollPane.setPreferredSize(new Dimension(750, 200));
+                        scrollPane.setColumnHeader(null);
+                        secondUpPanel.add(headers, BorderLayout.WEST);
+                        secondUpPanel.add(scrollPane, BorderLayout.CENTER);
+                        secondPanel.add(secondUpPanel);
+                        secondPanel.add(Box.createVerticalStrut(450));
+                        startButton.setEnabled(false);
+                        break;
+                }
+
+//                pg.drawGraph(g);
             }
         });
 
@@ -243,7 +269,6 @@ public class Main {
                 pg.drawStep(g);
             }
         });
-
 
         f.add(tp);
 
