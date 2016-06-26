@@ -44,7 +44,7 @@ public class Main {
         final JButton importDateButton = new JButton("Import data");   //ввод данных из файла
         final JButton startButton = new JButton("Make graph");        //начать алгоритм
         final JButton showResultsButton = new JButton("Show result");   //сразу показать результат
-        final JButton nextStep = new JButton("Next step"); // Следующий шаг
+
 
         /*
          * Панель графа (первая страница)
@@ -132,13 +132,12 @@ public class Main {
          * Правая верхняя панель со всем интерфейсом
          */
         JPanel rightUpPanel = new JPanel();
-        rightUpPanel.setLayout(new GridLayout(6, 1, 0, 3));
+        rightUpPanel.setLayout(new GridLayout(5, 1, 0, 3));
         rightUpPanel.add(numLine);
         rightUpPanel.add(edgeLine);
         rightUpPanel.add(importDateButton);
         rightUpPanel.add(startButton);
         rightUpPanel.add(showResultsButton);
-        rightUpPanel.add(nextStep);
         rightUpPanel.setPreferredSize(new Dimension(200, 300));
 
         /*
@@ -261,13 +260,6 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("DOESN'T WORK");
-            }
-        });
-
-        nextStep.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pg.drawStep(g);
             }
         });
 
