@@ -27,12 +27,13 @@ public class Main {
     }
 
     private static void createAndShowGUI() {
+
         state=State.Making;
 
         final JFrame f = new JFrame("Topological sort");
-        JTabbedPane tp = new JTabbedPane();         //окно состоит из 2х вкладок
-        JPanel firstPanel = new JPanel();             //на первой граф и кнопки
-        final JPanel secondPanel = new JPanel();    //на второй таблица
+        JTabbedPane tp = new JTabbedPane();             //окно состоит из 2х вкладок
+        JPanel firstPanel = new JPanel();               //на первой граф и кнопки
+        final JPanel secondPanel = new JPanel();        //на второй таблица
         secondPanel.setLayout(new BoxLayout(secondPanel, BoxLayout.PAGE_AXIS));
 
         final JPanel secondUpPanel = new JPanel();           //верхняя половина второй страницы
@@ -49,6 +50,11 @@ public class Main {
         final JButton saveButton = new JButton("Save");   //сохранить в файл
         final JButton restartButton = new JButton("Restart");   //заново
 
+        createEdgeButton.setEnabled(false);
+        startButton.setEnabled(false);
+        saveButton.setEnabled(false);
+        restartButton.setEnabled(false);
+
 
         /*
          * Панель графа (первая страница)
@@ -60,21 +66,12 @@ public class Main {
         /*
          * Панель, отвечающая за ввод кол-ва вершин
          */
-
-
         JPanel numLine = new JPanel();
         numLine.setLayout(new BoxLayout(numLine, BoxLayout.LINE_AXIS));
 
         final JTextField number = new JTextField();
         number.setDocument(new MyPlainDocument());
-        numOfVertexButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int num = Integer.parseInt(number.getText());
-                createEdgeButton.setEnabled(true);
-                g = new MyGraph(num);
-            }
-        });
+
         numLine.add(new JLabel("Number of vertex  "));
         numLine.add(Box.createHorizontalStrut(4));
         numLine.add(number);
@@ -88,10 +85,10 @@ public class Main {
         edgeLine.setLayout(new BoxLayout(edgeLine, BoxLayout.LINE_AXIS));
         final JTextField vert1 = new JTextField();
         vert1.setDocument(new MyPlainDocument());
+        vert1.setEnabled(false);
         final JTextField vert2 = new JTextField();
         vert2.setDocument(new MyPlainDocument());
-
-
+        vert2.setEnabled(false);
 
         edgeLine.add(new JLabel("New edge  "));
         edgeLine.add(Box.createHorizontalStrut(4));
@@ -116,7 +113,9 @@ public class Main {
         rightUpPanel.setPreferredSize(new Dimension(200,0));
         rightUpPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-
+        /*
+         * Список введенных ребер
+         */
         final JTextArea listOfEdges = new JTextArea("Edges:");
         listOfEdges.setEditable(false);
         JScrollPane edgesScrollPane = new JScrollPane(listOfEdges,
@@ -125,6 +124,9 @@ public class Main {
         edgesScrollPane.setPreferredSize(new Dimension(200,50));
         edgesScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        /*
+         * Сообщения о неверно введенных ребрах
+         */
         final JLabel errorMessage = new JLabel();
         errorMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
         errorMessage.setPreferredSize(new Dimension(200,50));
@@ -201,6 +203,28 @@ public class Main {
          * ActionListener'ы для кнопок с первой страницы
          */
 
+        //кнопка ввода количества вершин
+        numOfVertexButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int num = Integer.parseInt(number.getText());
+                g = new MyGraph(num);
+
+                vert1.setEnabled(true);
+                vert2.setEnabled(true);
+                createEdgeButton.setEnabled(true);
+                restartButton.setEnabled(true);
+                startButton.setEnabled(true);
+
+                number.setEnabled(false);
+                numOfVertexButton.setEnabled(false);
+                importDateButton.setEnabled(false);
+
+            }
+        });
+
+        //кнопка ввода ребра
         createEdgeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -248,6 +272,7 @@ public class Main {
             }
         });
 
+        //кнопка ввода данных
         importDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -255,7 +280,7 @@ public class Main {
             }
         });
 
-
+        //кнопка начала работы
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -298,6 +323,7 @@ public class Main {
             }
         });
 
+        //кнопка сохранения данных
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -314,12 +340,16 @@ public class Main {
         f.setVisible(true);
     }
 
+
+    /*
+     * Класс для управления JTextField'ами
+     */
     static class MyPlainDocument extends PlainDocument{
         String goodChars = "0123456789";
         @Override
         public void insertString (int offs, String str, AttributeSet a) throws BadLocationException{
             if(goodChars.contains(str)){
-                super.insertString(offs, str, a);
+                if(!str.equals("0")||(str.equals("0")&&getLength()>0)) super.insertString(offs, str, a);
             }
         }
     }

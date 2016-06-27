@@ -14,7 +14,7 @@ public class MyGraph {
     private ArrayList<Integer> history;             //порядок посещения
     private ArrayList<Integer> used;                //порядок использования
     private int[] renumbered;                       //перенумированы
-    private ArrayList<Integer> topSorted;                        //отсортированы
+    private ArrayList<Integer> topSorted;           //отсортированы
 
     private Integer[][] data;   //массив данных таблицы (состоит из 4х предыдущих массивов)
 
@@ -26,6 +26,9 @@ public class MyGraph {
         initGraph(n);
     }
 
+    /*
+     * Инициализация используемых массивов и коллекций
+     */
     public void initGraph(int n) {
         isVisited = new boolean[n];
 
@@ -46,6 +49,10 @@ public class MyGraph {
         System.out.println("init, size: "+adjLists.size());
     }
 
+
+    /*
+     * Проверить корректность ребра
+     */
     public void checkEdge(int from, int to) throws IllegalArgumentException{
 
         StringBuilder wrongVertex=new StringBuilder("");
@@ -64,11 +71,18 @@ public class MyGraph {
         createEdge(from,to);
     }
 
+    /*
+     * Создать ребро
+     */
     public void createEdge(int from, int to) {
         adjLists.get(from).add(to);
         System.out.println("edge " + (from+1) + "-" + (to+1) + " created");
     }
 
+
+    /*
+     * Отсортировать список смежности и запустить ПВГ
+     */
     public void startDfs(){
         for (int i = 0; i < adjLists.size(); i++) {
             Collections.sort(adjLists.get(i));
@@ -85,6 +99,9 @@ public class MyGraph {
         }
     }
 
+    /*
+     * ПВГ, начатый из вершины v
+     */
     public void dfs(int v){
         isVisited[v] = true;
         history.add(v);
@@ -97,6 +114,9 @@ public class MyGraph {
         used.add(v);
     }
 
+    /*
+     * Топологическая сортировка
+     */
     public void topSorting(){
 
         for (int i = 0; i < adjLists.size(); i++) {
@@ -113,6 +133,9 @@ public class MyGraph {
 
     }
 
+    /*
+     * Построить таблицу данных
+     */
     public JTable makeJTable(){
         //массив заголовков (номера вершин)
         Integer[] help=new Integer[adjLists.size()];
@@ -133,6 +156,9 @@ public class MyGraph {
         return table;
     }
 
+    /*
+     * Вывести список смежности в консоль (вспомогательное)
+     */
     public void printList() {
         for (int i = 0; i < adjLists.size(); i++) {
             System.out.print(i + ": ");
