@@ -5,8 +5,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 
 public class Main {
@@ -50,6 +49,7 @@ public class Main {
         final JButton saveButton = new JButton("Save");   //сохранить в файл
         final JButton restartButton = new JButton("Restart");   //заново
 
+        numOfVertexButton.setEnabled(false);
         createEdgeButton.setEnabled(false);
         startButton.setEnabled(false);
         saveButton.setEnabled(false);
@@ -200,8 +200,32 @@ public class Main {
 
 
         /*
-         * ActionListener'ы для кнопок с первой страницы
+         * Listener'ы для кнопок и полей с первой страницы
          */
+
+        number.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+                if(number.getText().equals("")) {
+                    numOfVertexButton.setEnabled(false);
+                }else{
+                    numOfVertexButton.setEnabled(true);
+                }
+                super.keyReleased(e);
+            }
+        });
+
+        vert1.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(!(vert1.getText().equals("")||vert2.getText().equals(""))) createEdgeButton.setEnabled(true);
+                else createEdgeButton.setEnabled(false);
+                super.keyReleased(e);
+            }
+        });
+
+        vert2.addKeyListener(vert1.getKeyListeners()[0]);
 
         //кнопка ввода количества вершин
         numOfVertexButton.addActionListener(new ActionListener() {
@@ -213,7 +237,6 @@ public class Main {
 
                 vert1.setEnabled(true);
                 vert2.setEnabled(true);
-                createEdgeButton.setEnabled(true);
                 restartButton.setEnabled(true);
                 startButton.setEnabled(true);
 
@@ -286,6 +309,11 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 switch (Main.state){
                     case Making:
+                        vert1.setEnabled(false);
+                        vert2.setEnabled(false);
+                        createEdgeButton.setEnabled(false);
+                        restartButton.setEnabled(false);
+
                         pg.drawGraphDfsWithSteps(g);
                         startButton.setText("Start DFS");
                         state=State.Searching;
@@ -315,6 +343,8 @@ public class Main {
                         secondUpPanel.add(scrollPane, BorderLayout.CENTER);
                         secondPanel.add(secondUpPanel);
                         secondPanel.add(Box.createVerticalStrut(450));
+                        restartButton.setEnabled(true);
+                        saveButton.setEnabled(true);
                         startButton.setEnabled(false);
                         break;
                 }
