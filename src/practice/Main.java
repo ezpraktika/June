@@ -1,6 +1,9 @@
 package practice;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +46,7 @@ public class Main {
         final JButton createEdgeButton = new JButton("ok");           //ввести ребро
         final JButton importDateButton = new JButton("Import data");   //ввод данных из файла
         final JButton startButton = new JButton("Make graph");        //начать алгоритм
-        final JButton showResultsButton = new JButton("Show result");   //сразу показать результат
+        final JButton showResultsButton = new JButton("Clear or save file");   //сразу показать результат
 
 
         /*
@@ -56,10 +59,22 @@ public class Main {
         /*
          * Панель, отвечающая за ввод кол-ва вершин
          */
+
+
         JPanel numLine = new JPanel();
         numLine.setLayout(new BoxLayout(numLine, BoxLayout.LINE_AXIS));
 
         final JTextField number = new JTextField();
+//        number.setDocument(new PlainDocument(){
+//            String goodChars = "0123456789";
+//            @Override
+//            public void insertString (int offset, String value, AttributeSet attributes) throws BadLocationException{
+//                if(goodChars.contains(value)){
+//                    super.insertString(offset, value, attributes);
+//                }
+//            }
+//        });
+        number.setDocument(new MyPlainDocument());
         numOfVertexButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,43 +95,53 @@ public class Main {
         JPanel edgeLine = new JPanel();
         edgeLine.setLayout(new BoxLayout(edgeLine, BoxLayout.LINE_AXIS));
         final JTextField vert1 = new JTextField();
+        vert1.setDocument(new MyPlainDocument());
         final JTextField vert2 = new JTextField();
+        vert2.setDocument(new MyPlainDocument());
 
         createEdgeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                int e1 = Integer.parseInt(vert1.getText());
-//                int e2 = Integer.parseInt(vert2.getText());
-//                vert1.setText("");
-//                vert2.setText("");
-//                System.out.println(e1 + " " + e2);
-//                g.createEdge(e1-1, e2-1);
+                int e1 = Integer.parseInt(vert1.getText());
+                int e2 = Integer.parseInt(vert2.getText());
+                vert1.setText("");
+                vert2.setText("");
+                System.out.println(e1 + " " + e2);
 
-                g.createEdge(0, 1);
-                g.createEdge(0, 2);
-                g.createEdge(0, 3);
-                g.createEdge(0, 5);
-                g.createEdge(0, 6);
+                //g.createEdge(e1-1, e2-1);
+                try{
+                    g.checkEdge(e1-1,e2-1);
+                    //добавить ребро
+                }catch(IllegalArgumentException iae){
+                    //добавить warning с ERROR: + w.getMessage()
+                    System.out.println("ERROR: " + iae.getMessage());
+                }
 
-                g.createEdge(2, 3);
-
-                g.createEdge(3, 4);
-                g.createEdge(3, 5);
-
-                g.createEdge(4, 9);
-
-                g.createEdge(6, 4);
-                g.createEdge(6, 9);
-
-                g.createEdge(7, 6);
-
-                g.createEdge(8, 7);
-
-                g.createEdge(9, 10);
-                g.createEdge(9, 11);
-                g.createEdge(9, 12);
-
-                g.createEdge(11, 12);
+//                g.createEdge(0, 1);
+//                g.createEdge(0, 2);
+//                g.createEdge(0, 3);
+//                g.createEdge(0, 5);
+//                g.createEdge(0, 6);
+//
+//                g.createEdge(2, 3);
+//
+//                g.createEdge(3, 4);
+//                g.createEdge(3, 5);
+//
+//                g.createEdge(4, 9);
+//
+//                g.createEdge(6, 4);
+//                g.createEdge(6, 9);
+//
+//                g.createEdge(7, 6);
+//
+//                g.createEdge(8, 7);
+//
+//                g.createEdge(9, 10);
+//                g.createEdge(9, 11);
+//                g.createEdge(9, 12);
+//
+//                g.createEdge(11, 12);
             }
         });
 
@@ -270,6 +295,16 @@ public class Main {
         f.setLocationRelativeTo(null);
         f.setResizable(false);
         f.setVisible(true);
+    }
+
+    static class MyPlainDocument extends PlainDocument{
+        String goodChars = "0123456789";
+        @Override
+        public void insertString (int offs, String str, AttributeSet a) throws BadLocationException{
+            if(goodChars.contains(str)){
+                super.insertString(offs, str, a);
+            }
+        }
     }
 }
 

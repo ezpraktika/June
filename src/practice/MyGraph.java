@@ -28,11 +28,13 @@ public class MyGraph {
 
     public void initGraph(int n) {
         isVisited = new boolean[n];
+
         history = new ArrayList<Integer>(n);
         used = new ArrayList<Integer>(n);
         renumbered = new int[n];
         topSorted = new ArrayList<Integer>(n);
         for(int i = 0; i < n; i++) topSorted.add(0);
+
         adjLists = new ArrayList<ArrayList<Integer>>();
         data=new Integer[4][n];
         edgesDfs = new ArrayList<Pair<Integer, Integer>>();
@@ -44,8 +46,27 @@ public class MyGraph {
         System.out.println("init, size: "+adjLists.size());
     }
 
+    public void checkEdge(int from, int to) throws IllegalArgumentException{
+
+        StringBuilder wrongVertex=new StringBuilder("");
+        if(from==-1||from>=adjLists.size()) wrongVertex.append(" " + (from+1));
+        if(to==-1||to>=adjLists.size()) wrongVertex.append(" " + (to+1));
+        if(!wrongVertex.toString().equals("")) throw new IllegalArgumentException("Wrong vertex:" + wrongVertex.toString());
+
+        if(from==to) throw new IllegalArgumentException("Loops aren't allowed");
+
+        if(adjLists.get(from).contains(to)) throw new IllegalArgumentException("Edge " + (from+1) + "-" + (to+1)+" already exist");
+
+        if(adjLists.get(to).contains(from)) throw new IllegalArgumentException("Reverse edges aren't allowed");
+
+        //if цикл
+
+        createEdge(from,to);
+    }
+
     public void createEdge(int from, int to) {
         adjLists.get(from).add(to);
+        System.out.println("edge " + (from+1) + "-" + (to+1) + " created");
     }
 
     public void startDfs(){
