@@ -46,7 +46,8 @@ public class Main {
         final JButton createEdgeButton = new JButton("ok");           //ввести ребро
         final JButton importDateButton = new JButton("Import data");   //ввод данных из файла
         final JButton startButton = new JButton("Make graph");        //начать алгоритм
-        final JButton showResultsButton = new JButton("Clear or save file");   //сразу показать результат
+        final JButton saveButton = new JButton("Save");   //сохранить в файл
+        final JButton restartButton = new JButton("Restart");   //заново
 
 
         /*
@@ -65,15 +66,6 @@ public class Main {
         numLine.setLayout(new BoxLayout(numLine, BoxLayout.LINE_AXIS));
 
         final JTextField number = new JTextField();
-//        number.setDocument(new PlainDocument(){
-//            String goodChars = "0123456789";
-//            @Override
-//            public void insertString (int offset, String value, AttributeSet attributes) throws BadLocationException{
-//                if(goodChars.contains(value)){
-//                    super.insertString(offset, value, attributes);
-//                }
-//            }
-//        });
         number.setDocument(new MyPlainDocument());
         numOfVertexButton.addActionListener(new ActionListener() {
             @Override
@@ -99,51 +91,7 @@ public class Main {
         final JTextField vert2 = new JTextField();
         vert2.setDocument(new MyPlainDocument());
 
-        createEdgeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int e1 = Integer.parseInt(vert1.getText());
-                int e2 = Integer.parseInt(vert2.getText());
-                vert1.setText("");
-                vert2.setText("");
-                System.out.println(e1 + " " + e2);
 
-                //g.createEdge(e1-1, e2-1);
-                try{
-                    g.checkEdge(e1-1,e2-1);
-                    //добавить ребро
-                }catch(IllegalArgumentException iae){
-                    //добавить warning с ERROR: + w.getMessage()
-                    System.out.println("ERROR: " + iae.getMessage());
-                }
-
-//                g.createEdge(0, 1);
-//                g.createEdge(0, 2);
-//                g.createEdge(0, 3);
-//                g.createEdge(0, 5);
-//                g.createEdge(0, 6);
-//
-//                g.createEdge(2, 3);
-//
-//                g.createEdge(3, 4);
-//                g.createEdge(3, 5);
-//
-//                g.createEdge(4, 9);
-//
-//                g.createEdge(6, 4);
-//                g.createEdge(6, 9);
-//
-//                g.createEdge(7, 6);
-//
-//                g.createEdge(8, 7);
-//
-//                g.createEdge(9, 10);
-//                g.createEdge(9, 11);
-//                g.createEdge(9, 12);
-//
-//                g.createEdge(11, 12);
-            }
-        });
 
         edgeLine.add(new JLabel("New edge  "));
         edgeLine.add(Box.createHorizontalStrut(4));
@@ -157,13 +105,30 @@ public class Main {
          * Правая верхняя панель со всем интерфейсом
          */
         JPanel rightUpPanel = new JPanel();
-        rightUpPanel.setLayout(new GridLayout(5, 1, 0, 3));
+        rightUpPanel.setLayout(new GridLayout(6, 1, 0, 3));
         rightUpPanel.add(numLine);
         rightUpPanel.add(edgeLine);
         rightUpPanel.add(importDateButton);
+        rightUpPanel.add(saveButton);
+        rightUpPanel.add(restartButton);
         rightUpPanel.add(startButton);
-        rightUpPanel.add(showResultsButton);
-        rightUpPanel.setPreferredSize(new Dimension(200, 300));
+
+        rightUpPanel.setPreferredSize(new Dimension(200,0));
+        rightUpPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+
+        final JTextArea listOfEdges = new JTextArea("Edges:");
+        listOfEdges.setEditable(false);
+        JScrollPane edgesScrollPane = new JScrollPane(listOfEdges,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        edgesScrollPane.setPreferredSize(new Dimension(200,50));
+        edgesScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        final JLabel errorMessage = new JLabel();
+        errorMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
+        errorMessage.setPreferredSize(new Dimension(200,50));
+
 
         /*
          * Правая панель целиком
@@ -171,7 +136,11 @@ public class Main {
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
         rightPanel.add(rightUpPanel);
-        rightPanel.add(Box.createVerticalStrut(500));
+        rightPanel.add(Box.createVerticalStrut(20));
+        rightPanel.add(edgesScrollPane);
+        rightPanel.add(errorMessage);
+        rightPanel.add(Box.createVerticalStrut(200));
+
         rightPanel.setPreferredSize(new Dimension(200, 600));
 
         /*
@@ -231,6 +200,54 @@ public class Main {
         /*
          * ActionListener'ы для кнопок с первой страницы
          */
+
+        createEdgeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int e1 = Integer.parseInt(vert1.getText());
+                int e2 = Integer.parseInt(vert2.getText());
+                vert1.setText("");
+                vert2.setText("");
+
+                try{
+
+                    g.checkEdge(e1-1,e2-1);
+                    listOfEdges.append("\n" + e1 + " - " + e2);
+                    if(!errorMessage.getText().equals("")) errorMessage.setText("");
+
+                }catch(IllegalArgumentException iae){
+                    errorMessage.setText("ERROR: " + iae.getMessage());
+                    System.out.println("ERROR: " + iae.getMessage());
+                }
+
+//                g.createEdge(0, 1);
+//                g.createEdge(0, 2);
+//                g.createEdge(0, 3);
+//                g.createEdge(0, 5);
+//                g.createEdge(0, 6);
+//
+//                g.createEdge(2, 3);
+//
+//                g.createEdge(3, 4);
+//                g.createEdge(3, 5);
+//
+//                g.createEdge(4, 9);
+//
+//                g.createEdge(6, 4);
+//                g.createEdge(6, 9);
+//
+//                g.createEdge(7, 6);
+//
+//                g.createEdge(8, 7);
+//
+//                g.createEdge(9, 10);
+//                g.createEdge(9, 11);
+//                g.createEdge(9, 12);
+//
+//                g.createEdge(11, 12);
+            }
+        });
+
         importDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -281,7 +298,7 @@ public class Main {
             }
         });
 
-        showResultsButton.addActionListener(new ActionListener() {
+        saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("DOESN'T WORK");

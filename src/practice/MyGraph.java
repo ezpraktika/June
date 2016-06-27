@@ -57,7 +57,7 @@ public class MyGraph {
 
         if(adjLists.get(from).contains(to)) throw new IllegalArgumentException("Edge " + (from+1) + "-" + (to+1)+" already exist");
 
-        if(adjLists.get(to).contains(from)) throw new IllegalArgumentException("Reverse edges aren't allowed");
+        if(adjLists.get(to).contains(from)) throw new IllegalArgumentException("Reverse edge");
 
         //if цикл
 
