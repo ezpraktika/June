@@ -114,7 +114,7 @@ public class PaintGraph extends JPanel {
         int r = 290;
 
         for (int i = 0; i < points.length; i++) {
-            points[i] = graph.insertVertex(parent, null, i + 1, 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#500050;fontColor=#FFFFFF");
+            points[i] = graph.insertVertex(parent, null, i + 1, 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#f1f1f1;fontColor=#6f8bbd");
             phi0 += phi;
         }
 
@@ -181,10 +181,10 @@ public class PaintGraph extends JPanel {
         double phi = 2 * Math.PI / n;
         int r = 290;
 
-        points[0] = graph.insertVertex(parent, null, (g.getTopSorted().get(0) + 1), 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#FF0000;fontColor=#FFFFFF");
+        points[0] = graph.insertVertex(parent, null, (g.getTopSorted().get(0) + 1), 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#6f8bbd;fontColor=#f1f1f1");
         phi0 += phi;
         for (int i = 1; i < points.length; i++) {
-            points[i] = graph.insertVertex(parent, null, (g.getTopSorted().get(i) + 1), 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#500050;fontColor=#FFFFFF");
+            points[i] = graph.insertVertex(parent, null, (g.getTopSorted().get(i) + 1), 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#f1f1f1;fontColor=#734a96");
             phi0 += phi;
         }
         for (int i = 0; i < adjacencyList.size(); i++) {

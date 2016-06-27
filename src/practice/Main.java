@@ -70,7 +70,7 @@ public class Main {
         numLine.setLayout(new BoxLayout(numLine, BoxLayout.LINE_AXIS));
 
         final JTextField number = new JTextField();
-        number.setDocument(new MyPlainDocument(true));
+        number.setDocument(new MyPlainDocument());
 
         numLine.add(new JLabel("Number of vertex  "));
         numLine.add(Box.createHorizontalStrut(4));
@@ -84,10 +84,10 @@ public class Main {
         JPanel edgeLine = new JPanel();
         edgeLine.setLayout(new BoxLayout(edgeLine, BoxLayout.LINE_AXIS));
         final JTextField vert1 = new JTextField();
-        vert1.setDocument(new MyPlainDocument(false));
+        vert1.setDocument(new MyPlainDocument());
         vert1.setEnabled(false);
         final JTextField vert2 = new JTextField();
-        vert2.setDocument(new MyPlainDocument(false));
+        vert2.setDocument(new MyPlainDocument());
         vert2.setEnabled(false);
 
         edgeLine.add(new JLabel("New edge  "));
@@ -207,7 +207,7 @@ public class Main {
             @Override
             public void keyReleased(KeyEvent e) {
 
-                if(number.getText().equals("")) {
+                if(number.getText().equals("")||number.getText().equals("1")) {
                     numOfVertexButton.setEnabled(false);
                 }else{
                     numOfVertexButton.setEnabled(true);
@@ -376,25 +376,14 @@ public class Main {
      */
     static class MyPlainDocument extends PlainDocument{
 
-        String goodChars;
-        String alsoGoodChars;
+        String goodChars="123456789";
 
-        MyPlainDocument(boolean flag){
-            if(flag){
-                goodChars="23456789";
-                alsoGoodChars="01";
-            }
-            else{
-                goodChars="123456789";
-                alsoGoodChars="0";
-            }
-        }
         @Override
         public void insertString (int offs, String str, AttributeSet a) throws BadLocationException{
             if(goodChars.contains(str)){
                super.insertString(offs, str, a);
             }
-            if (alsoGoodChars.contains(str)&&getLength()>0) super.insertString(offs, str, a);
+            if (str.equals("0")&&getLength()>0) super.insertString(offs, str, a);
         }
     }
 }
