@@ -2,6 +2,7 @@ package practice;
 
 import com.mxgraph.swing.mxGraphComponent;
 
+import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxGraph;
 
 import javafx.util.Pair;
@@ -92,15 +93,16 @@ public class PaintGraph extends JPanel {
 
     public void drawGraphDfsWithSteps(final MyGraph g) {
 
+
         removeAll();
         this.setSize(600, 600);
         ArrayList<ArrayList<Integer>> adjacencyList = g.getAdjLists();
-        final ArrayList<Integer> history = g.getHistory();
-        final ArrayList<Pair<Integer, Integer>> edgesDfs = g.getEdgesDfs();
-
 
         final mxGraph graph = new mxGraph();
         final Object parent = graph.getDefaultParent();
+
+        graph.setCellsMovable(false);
+        graph.setCellsSelectable(false);
 
         graph.getModel().beginUpdate();
 
@@ -112,7 +114,7 @@ public class PaintGraph extends JPanel {
         int r = 290;
 
         for (int i = 0; i < points.length; i++) {
-            points[i] = graph.insertVertex(parent, null, i + 1, 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;strokeColor=green;fillColor=white");
+            points[i] = graph.insertVertex(parent, null, i + 1, 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#500050;fontColor=#FFFFFF");
             phi0 += phi;
         }
 
@@ -128,13 +130,9 @@ public class PaintGraph extends JPanel {
 
         g.setMyGraph(graph);
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
+        graphComponent.setConnectable(false);
         this.add(graphComponent);
-//        for (int i = 0; i < edgesDfs.size(); i++) {
-//
-//            graph.getModel().setValue(points[history.get(i)],graph.getModel().getValue(points[history.get(i)]).toString() + "(" + (i+1) + ")");
-//            graph.insertEdge(parent, null, null, points[edgesDfs.get(i).getKey()], points[edgesDfs.get(i).getValue()], "strokeColor=red");
-//            this.revalidate();
-//        }
+
         this.revalidate();
 
     }
@@ -149,15 +147,10 @@ public class PaintGraph extends JPanel {
         if (stepNumber == 0) {
             graph.getModel().setValue(g.getPoints()[history.get(0)], graph.getModel().getValue(g.getPoints()[history.get(0)]).toString() + "(1)");
         } else {
-//            if (edgesDfs.contains(new Pair<Integer, Integer>(history.get(stepNumber), history.get(stepNumber + 1)))) {
-//                graph.insertEdge(parent, null, null, g.getPoints()[history.get(stepNumber)], g.getPoints()[history.get(stepNumber+1)], "strokeColor=red");
-////                graph.insertEdge(parent, null, null, g.getPoints()[edgesDfs.get(stepNumber).getKey()], g.getPoints()[edgesDfs.get(stepNumber).getValue()], "strokeColor=red");
-//            }
 
             for (int i = 0; i < history.get(stepNumber); i++) {
                 if (edgesDfs.contains(new Pair<Integer, Integer>(i, history.get(stepNumber)))) {
-//                    graph.getModel().setStyle(graph.getEdgesBetween(g.getPoints()[i],g.getPoints()[stepNumber]),"strokeColor=red");
-                    graph.insertEdge(parent, null, null, g.getPoints()[i], g.getPoints()[history.get(stepNumber)], "strokeColor=red");
+                    graph.getModel().setStyle(graph.getEdgesBetween(g.getPoints()[i], g.getPoints()[history.get(stepNumber)])[0], "strokeColor=red");
                     break;
                 }
             }
@@ -170,12 +163,16 @@ public class PaintGraph extends JPanel {
         stepNumber++;
     }
 
-    public void drawSortedGraph(MyGraph g){
+    public void drawSortedGraph(MyGraph g) {
         removeAll();
         ArrayList<ArrayList<Integer>> adjacencyList = g.getAdjLists();
         this.setSize(600, 600);
         mxGraph graph = new mxGraph();
         Object parent = graph.getDefaultParent();
+
+        graph.setCellsMovable(false);
+        graph.setCellsSelectable(false);
+
         graph.getModel().beginUpdate();
         int n = adjacencyList.size();
         Object points[] = new Object[n];
@@ -184,8 +181,10 @@ public class PaintGraph extends JPanel {
         double phi = 2 * Math.PI / n;
         int r = 290;
 
-        for (int i = 0; i < points.length; i++) {
-            points[i] = graph.insertVertex(parent, null, (g.getTopSorted().get(i)+1), 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;strokeColor=red;fillColor=white");
+        points[0] = graph.insertVertex(parent, null, (g.getTopSorted().get(0) + 1), 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#FF0000;fontColor=#FFFFFF");
+        phi0 += phi;
+        for (int i = 1; i < points.length; i++) {
+            points[i] = graph.insertVertex(parent, null, (g.getTopSorted().get(i) + 1), 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#500050;fontColor=#FFFFFF");
             phi0 += phi;
         }
         for (int i = 0; i < adjacencyList.size(); i++) {
@@ -196,6 +195,7 @@ public class PaintGraph extends JPanel {
         graph.getModel().endUpdate();
 
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
+        graphComponent.setConnectable(false);
         this.add(graphComponent);
         this.revalidate();
     }
