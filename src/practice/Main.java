@@ -310,7 +310,7 @@ public class Main {
                                                    if (returnVal == JFileChooser.APPROVE_OPTION) {
                                                        try {
                                                            File file = fc.getSelectedFile();
-                                                           if (!file.getName().contains(".txt")) {
+                                                           if (!getFileExtension(file).equals("txt")) {
                                                                throw new IOException("WRONG TYPE OF FILE");
                                                            }
                                                            BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -405,8 +405,11 @@ public class Main {
                                                  if (returnVal == JFileChooser.APPROVE_OPTION) {
 
                                                      File file = fc.getSelectedFile();
-                                                     if (!file.getName().contains(".txt")) {
+                                                     if (!getFileExtension(file).equals("txt")) {
                                                          throw new IOException("WRONG TYPE OF FILE");
+                                                     }
+                                                     if (!file.exists()){
+                                                         file.createNewFile();
                                                      }
                                                      if (file.canWrite()) {
                                                          BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -465,6 +468,15 @@ public class Main {
             }
             if (str.equals("0") && getLength() > 0) super.insertString(offs, str, a);
         }
+    }
+    private static String getFileExtension(File file) {
+        String fileName = file.getName();
+        // если в имени файла есть точка и она не является первым символом в названии файла
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+            // то вырезаем все знаки после последней точки в названии файла, то есть ХХХХХ.txt -> txt
+            return fileName.substring(fileName.lastIndexOf(".")+1);
+            // в противном случае возвращаем заглушку, то есть расширение не найдено
+        else return "";
     }
 }
 
