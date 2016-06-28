@@ -412,7 +412,7 @@ public class Main {
                                                      }
                                                      if (file.canWrite()) {
                                                          BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                                                         writer.write("Количество вершин:" + g.getAdjLists().size());
+                                                         writer.write("Количество вершин: " + g.getAdjLists().size());
 
                                                          writer.newLine();
                                                          writer.write("Список смежности:");
