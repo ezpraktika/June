@@ -148,7 +148,7 @@ public class PaintGraph extends JPanel {
             graph.getModel().setValue(g.getPoints()[history.get(0)], graph.getModel().getValue(g.getPoints()[history.get(0)]).toString() + "(1)");
         } else {
 
-            for (int i = 0; i < history.get(stepNumber); i++) {
+            for (int i = 0; i < history.size(); i++) {
                 if (edgesDfs.contains(new Pair<Integer, Integer>(i, history.get(stepNumber)))) {
                     graph.getModel().setStyle(graph.getEdgesBetween(g.getPoints()[i], g.getPoints()[history.get(stepNumber)])[0], "strokeColor=red");
                     break;
