@@ -318,6 +318,7 @@ public class Main {
                                                                String[] values = s.split(" ");
                                                                if (values.length == 2) {
                                                                    g.checkEdge(Integer.parseInt(values[0]) - 1, Integer.parseInt(values[1]) - 1);
+                                                                   listOfEdges.append("\n" + (Integer.parseInt(values[0])) + " - " + (Integer.parseInt(values[1])));
                                                                } else {
                                                                    throw new IOException("Incorrect edge");
                                                                }
@@ -326,11 +327,11 @@ public class Main {
                                                            number.setEnabled(false);
                                                            importDateButton.setEnabled(false);
                                                        } catch (IOException ex) {
-                                                           //System.out.println(ex);
                                                            errorMessage.setText("FILE ERROR: " + ex.getMessage());
+                                                           listOfEdges.setText("Edges: ");
                                                        } catch (IllegalArgumentException ex) {
                                                            errorMessage.setText("ERROR: " + ex.getMessage());
-                                                           //System.out.println(ex);
+                                                           listOfEdges.setText("Edges: ");
                                                        }
                                                    }
 
