@@ -178,7 +178,7 @@ public class PaintGraph extends JPanel {
         Object points[] = new Object[n];
 
         double phi0 = 0;
-        double phi = 2 * Math.PI / n;
+        double phi = 2 *     Math.PI / n;
         int r = 290;
 
         points[0] = graph.insertVertex(parent, null, (g.getTopSorted().get(0) + 1), 300 + r * Math.cos(phi0), 300 + r * Math.sin(phi0), 40, 40, "shape=ellipse;fillColor=#6f8bbd;fontColor=#f1f1f1");

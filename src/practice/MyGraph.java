@@ -205,5 +205,6 @@ public class MyGraph {
     public void setPoints(Object[] points) {
         this.points = points;
     }
+
 }
 

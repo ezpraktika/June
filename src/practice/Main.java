@@ -1,11 +1,14 @@
 package practice;
 
+import javafx.stage.FileChooser;
+
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 
 public class Main {
@@ -13,7 +16,9 @@ public class Main {
     private static MyGraph g;
     private static PaintGraph pg;
     private static State state;
-    enum State{
+    private static JFileChooser fc;
+
+    enum State {
         Making, Searching, Sorting
     }
 
@@ -25,9 +30,10 @@ public class Main {
         });
     }
 
+
     private static void createAndShowGUI() {
 
-        state=State.Making;
+        state = State.Making;
 
         final JFrame f = new JFrame("Topological sort");
         JTabbedPane tp = new JTabbedPane();             //окно состоит из 2х вкладок
@@ -110,7 +116,7 @@ public class Main {
         rightUpPanel.add(restartButton);
         rightUpPanel.add(startButton);
 
-        rightUpPanel.setPreferredSize(new Dimension(200,0));
+        rightUpPanel.setPreferredSize(new Dimension(200, 0));
         rightUpPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         /*
@@ -121,7 +127,7 @@ public class Main {
         JScrollPane edgesScrollPane = new JScrollPane(listOfEdges,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        edgesScrollPane.setPreferredSize(new Dimension(200,50));
+        edgesScrollPane.setPreferredSize(new Dimension(200, 50));
         edgesScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         /*
@@ -129,7 +135,7 @@ public class Main {
          */
         final JLabel errorMessage = new JLabel();
         errorMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
-        errorMessage.setPreferredSize(new Dimension(200,50));
+        errorMessage.setPreferredSize(new Dimension(200, 50));
 
 
         /*
@@ -207,9 +213,9 @@ public class Main {
             @Override
             public void keyReleased(KeyEvent e) {
 
-                if(number.getText().equals("")||number.getText().equals("1")) {
+                if (number.getText().equals("") || number.getText().equals("1")) {
                     numOfVertexButton.setEnabled(false);
-                }else{
+                } else {
                     numOfVertexButton.setEnabled(true);
                 }
                 super.keyReleased(e);
@@ -219,7 +225,7 @@ public class Main {
         vert1.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if(!(vert1.getText().equals("")||vert2.getText().equals(""))) createEdgeButton.setEnabled(true);
+                if (!(vert1.getText().equals("") || vert2.getText().equals(""))) createEdgeButton.setEnabled(true);
                 else createEdgeButton.setEnabled(false);
                 super.keyReleased(e);
             }
@@ -256,13 +262,13 @@ public class Main {
                 vert1.setText("");
                 vert2.setText("");
 
-                try{
+                try {
 
-                    g.checkEdge(e1-1,e2-1);
+                    g.checkEdge(e1 - 1, e2 - 1);
                     listOfEdges.append("\n" + e1 + " - " + e2);
-                    if(!errorMessage.getText().equals("")) errorMessage.setText("");
+                    if (!errorMessage.getText().equals("")) errorMessage.setText("");
 
-                }catch(IllegalArgumentException iae){
+                } catch (IllegalArgumentException iae) {
                     errorMessage.setText("ERROR: " + iae.getMessage());
                     System.out.println("ERROR: " + iae.getMessage());
                 }
@@ -297,69 +303,143 @@ public class Main {
 
         //кнопка ввода данных
         importDateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("DOESN'T WORK");
-            }
-        });
+                                               @Override
+                                               public void actionPerformed(ActionEvent e) {
+                                                   fc = new JFileChooser();
+                                                   int returnVal = fc.showOpenDialog(null);
+                                                   if (returnVal == JFileChooser.APPROVE_OPTION) {
+                                                       try {
+                                                           File file = fc.getSelectedFile();
+                                                           if (!file.getName().contains(".txt")) {
+                                                               throw new IOException("WRONG TYPE OF FILE");
+                                                           }
+                                                           BufferedReader reader = new BufferedReader(new FileReader(file));
+                                                           int numberOfVertex = Integer.parseInt(reader.readLine());
+                                                           if (numberOfVertex >= 2) {
+                                                               g = new MyGraph(numberOfVertex);
+                                                           } else {
+                                                               throw new NumberFormatException("ERROR(NUMBEROFVERTEX)");
+                                                           }
+                                                           String s;
+                                                           while ((s = reader.readLine()) != null) {
+                                                               System.out.println(s);
+                                                               String[] values = s.split(" ");
+                                                               if (values.length == 2) {
+                                                                   g.checkEdge(Integer.parseInt(values[0]) - 1, Integer.parseInt(values[1]) - 1);
+                                                               } else {
+                                                                   throw new IOException("ERROR(VALUESNUMBER)");
+                                                               }
+                                                           }
+                                                           startButton.setEnabled(true);
+                                                       } catch (IOException ex) {
+                                                           System.out.println(ex);
+                                                       } catch (IllegalArgumentException ex) {
+                                                           System.out.println(ex);
+                                                       }
+                                                   }
+
+                                               }
+                                           }
+
+        );
 
         //кнопка начала работы
         startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switch (Main.state){
-                    case Making:
-                        vert1.setEnabled(false);
-                        vert2.setEnabled(false);
-                        createEdgeButton.setEnabled(false);
-                        restartButton.setEnabled(false);
+                                          @Override
+                                          public void actionPerformed(ActionEvent e) {
+                                              switch (Main.state) {
+                                                  case Making:
+                                                      vert1.setEnabled(false);
+                                                      vert2.setEnabled(false);
+                                                      createEdgeButton.setEnabled(false);
+                                                      restartButton.setEnabled(false);
 
-                        pg.drawGraphDfsWithSteps(g);
-                        startButton.setText("Start DFS");
-                        state=State.Searching;
-                        g.startDfs();
-                        break;
+                                                      pg.drawGraphDfsWithSteps(g);
+                                                      startButton.setText("Start DFS");
+                                                      state = State.Searching;
+                                                      g.startDfs();
+                                                      break;
 
-                    case Searching:
-                        if(pg.getStepNumber()==0){
-                            startButton.setText("Next step");
-                        }
-                        pg.drawStep(g);
-                        if(pg.getStepNumber()>=g.getAdjLists().size()){
-                            startButton.setText("Sort");
-                            state=State.Sorting;
-                        }
-                        break;
-                    case Sorting:
+                                                  case Searching:
+                                                      if (pg.getStepNumber() == 0) {
+                                                          startButton.setText("Next step");
+                                                      }
+                                                      pg.drawStep(g);
+                                                      if (pg.getStepNumber() >= g.getAdjLists().size()) {
+                                                          startButton.setText("Sort");
+                                                          state = State.Sorting;
+                                                      }
+                                                      break;
+                                                  case Sorting:
 
-                        g.topSorting();
-                        pg.drawSortedGraph(g);
-                        final JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
-                                ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-                        scrollPane.setPreferredSize(new Dimension(750, 200));
-                        scrollPane.setColumnHeader(null);
-                        secondUpPanel.add(headers, BorderLayout.WEST);
-                        secondUpPanel.add(scrollPane, BorderLayout.CENTER);
-                        secondPanel.add(secondUpPanel);
-                        secondPanel.add(Box.createVerticalStrut(450));
-                        restartButton.setEnabled(true);
-                        saveButton.setEnabled(true);
-                        startButton.setEnabled(false);
-                        break;
-                }
+                                                      g.topSorting();
+                                                      pg.drawSortedGraph(g);
+                                                      final JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
+                                                              ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                                                              ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+                                                      scrollPane.setPreferredSize(new Dimension(750, 200));
+                                                      scrollPane.setColumnHeader(null);
+                                                      secondUpPanel.add(headers, BorderLayout.WEST);
+                                                      secondUpPanel.add(scrollPane, BorderLayout.CENTER);
+                                                      secondPanel.add(secondUpPanel);
+                                                      secondPanel.add(Box.createVerticalStrut(450));
+                                                      restartButton.setEnabled(true);
+                                                      saveButton.setEnabled(true);
+                                                      startButton.setEnabled(false);
+                                                      break;
+                                              }
 
 //                pg.drawGraph(g);
-            }
-        });
+                                          }
+                                      }
+
+        );
 
         //кнопка сохранения данных
         saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("DOESN'T WORK");
-            }
-        });
+                                         @Override
+                                         public void actionPerformed(ActionEvent e) {
+                                             try {
+                                                 fc = new JFileChooser();
+                                                 int returnVal = fc.showSaveDialog(null);
+                                                 if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+                                                     File file = fc.getSelectedFile();
+                                                     if (!file.getName().contains(".txt")) {
+                                                         throw new IOException("WRONG TYPE OF FILE");
+                                                     }
+                                                     if (file.canWrite()) {
+                                                         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                                                         writer.write("Количество вершин:" + g.getAdjLists().size());
+
+                                                         writer.newLine();
+                                                         writer.write("Список смежности:");
+                                                         writer.newLine();
+                                                         for (int i = 0; i < g.getAdjLists().size(); i++) {
+                                                             writer.write(i + ": ");
+                                                             for (int j = 0; j < g.getAdjLists().get(i).size(); j++) {
+                                                                 writer.write(g.getAdjLists().get(i).get(j) + " ");
+                                                             }
+                                                             writer.newLine();
+                                                         }
+                                                         writer.write("Вершины в отсортированном порядке: ");
+                                                         for(int i = 0; i < g.getTopSorted().size(); i++){
+                                                             writer.write((g.getTopSorted().get(i)+1) + " ");
+                                                         }
+                                                         writer.flush();
+                                                     }
+                                                     else{
+                                                         throw new IOException("CANT WRITE TO THIS FILE");
+                                                     }
+
+                                                 }
+                                             } catch (IOException ex) {
+                                                 System.out.println(ex);
+                                             }
+
+                                         }
+                                     }
+        );
 
         f.add(tp);
 
@@ -374,16 +454,16 @@ public class Main {
     /*
      * Класс для управления JTextField'ами
      */
-    static class MyPlainDocument extends PlainDocument{
+    static class MyPlainDocument extends PlainDocument {
 
-        String goodChars="123456789";
+        String goodChars = "123456789";
 
         @Override
-        public void insertString (int offs, String str, AttributeSet a) throws BadLocationException{
-            if(goodChars.contains(str)){
-               super.insertString(offs, str, a);
+        public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+            if (goodChars.contains(str)) {
+                super.insertString(offs, str, a);
             }
-            if (str.equals("0")&&getLength()>0) super.insertString(offs, str, a);
+            if (str.equals("0") && getLength() > 0) super.insertString(offs, str, a);
         }
     }
 }
