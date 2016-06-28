@@ -311,14 +311,14 @@ public class Main {
                                                        try {
                                                            File file = fc.getSelectedFile();
                                                            if (!getFileExtension(file).equals("txt")) {
-                                                               throw new IOException("WRONG TYPE OF FILE");
+                                                               throw new IOException("Wrong type of file");
                                                            }
                                                            BufferedReader reader = new BufferedReader(new FileReader(file));
                                                            int numberOfVertex = Integer.parseInt(reader.readLine());
                                                            if (numberOfVertex >= 2) {
                                                                g = new MyGraph(numberOfVertex);
                                                            } else {
-                                                               throw new NumberFormatException("ERROR(NUMBEROFVERTEX)");
+                                                               throw new NumberFormatException("Wrong number of vertex");
                                                            }
                                                            String s;
                                                            while ((s = reader.readLine()) != null) {
@@ -327,14 +327,18 @@ public class Main {
                                                                if (values.length == 2) {
                                                                    g.checkEdge(Integer.parseInt(values[0]) - 1, Integer.parseInt(values[1]) - 1);
                                                                } else {
-                                                                   throw new IOException("ERROR(VALUESNUMBER)");
+                                                                   throw new IOException("Incorrect edge");
                                                                }
                                                            }
                                                            startButton.setEnabled(true);
+                                                           number.setEnabled(false);
+                                                           importDateButton.setEnabled(false);
                                                        } catch (IOException ex) {
-                                                           System.out.println(ex);
+                                                           //System.out.println(ex);
+                                                           errorMessage.setText("FILE ERROR: " + ex.getMessage());
                                                        } catch (IllegalArgumentException ex) {
-                                                           System.out.println(ex);
+                                                           errorMessage.setText("ERROR: " + ex.getMessage());
+                                                           //System.out.println(ex);
                                                        }
                                                    }
 
@@ -353,6 +357,7 @@ public class Main {
                                                       vert2.setEnabled(false);
                                                       createEdgeButton.setEnabled(false);
                                                       restartButton.setEnabled(false);
+                                                      errorMessage.setText("");
 
                                                       pg.drawGraphDfsWithSteps(g);
                                                       startButton.setText("Start DFS");
@@ -374,6 +379,7 @@ public class Main {
 
                                                       g.topSorting();
                                                       pg.drawSortedGraph(g);
+                                                      errorMessage.setText("Clockwise orientation");
                                                       final JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
                                                               ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
                                                               ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);

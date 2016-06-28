@@ -22,6 +22,12 @@ public class MyGraph {
     private mxGraph myGraph;
     private Object[] points;
 
+    private Color[] coloredVertex;
+
+    enum Color {
+        White, Grey, Black
+    }
+
     public MyGraph(int n) {
         initGraph(n);
     }
@@ -41,6 +47,11 @@ public class MyGraph {
         adjLists = new ArrayList<ArrayList<Integer>>();
         data=new Integer[4][n];
         edgesDfs = new ArrayList<Pair<Integer, Integer>>();
+
+        coloredVertex = new Color[n];
+        for (int i = 0; i < n; i++) {
+            coloredVertex[i] = Color.White;
+        }
 
         for(int v=0; v<n; v++){
             adjLists.add(new ArrayList<Integer>());
@@ -66,7 +77,7 @@ public class MyGraph {
 
         if(adjLists.get(to).contains(from)) throw new IllegalArgumentException("Reverse edge");
 
-        //if цикл
+        if (isCycled(from, to)) throw new IllegalArgumentException("Edge " + (from+1) + " - " + (to+1) + " forms a loop");
 
         createEdge(from,to);
     }
@@ -76,17 +87,59 @@ public class MyGraph {
      */
     public void createEdge(int from, int to) {
         adjLists.get(from).add(to);
-        System.out.println("edge " + (from+1) + "-" + (to+1) + " created");
     }
 
+    /*
+     * Проверить наличие циклов в графе
+     */
+    private boolean isCycled(int from, int to){
+        createEdge(from,to);                            //добавляем ребро
+        for (ArrayList<Integer> adjList : adjLists) {     //сортируем список смежности
+            Collections.sort(adjList);
+        }
+        for (int i = 0; i < adjLists.size(); i++) {     //для каждой
+            if(!isVisited[i]){                          //непосещенной вершины
+                if(coloredDfs(i)){                      //выполняем модифицированный ПВГ и если цикл найден
+                    for (int j = 0; j < adjLists.size(); j++) {    //окрашиваем все вершины в белый (для последующих проверок)
+                        coloredVertex[j]=Color.White;
+                    }
+                    adjLists.get(from).remove(new Integer(to)); //удаляем проверяемое ребро
+                    return true;
+                }
+            }
+        }
+
+        //сюда попадаем если цикл не найден
+        for (int j = 0; j < adjLists.size(); j++) {     //окрашиваем все вершины в белый (для последующих проверок)
+            coloredVertex[j]=Color.White;
+        }
+        adjLists.get(from).remove(new Integer(to));     //удаляем проверяемое ребро
+        return false;
+    }
+
+    /*
+     * Модифицированный ПВГ для поиска циклов
+     */
+    private boolean coloredDfs(int v){
+        coloredVertex[v] = Color.Grey;  //вершина посещена
+        for(int w : adjLists.get(v)) {
+            if (coloredVertex[w] == Color.White)    //если вершина непосещена, переходим в нее
+                if(coloredDfs(w)) return true;
+            if (coloredVertex[w] == Color.Grey)     //если наткнулись на посещенную вершину - цикл найден
+                return true;              // вывод ответа
+        }
+        coloredVertex[v] = Color.Black;    //вершина использована
+        return false;   //при ПВГ из данной верщины цикл не найден
+    }
 
     /*
      * Отсортировать список смежности и запустить ПВГ
      */
     public void startDfs(){
-        for (int i = 0; i < adjLists.size(); i++) {
-            Collections.sort(adjLists.get(i));
-        }
+//        for (ArrayList<Integer> adjList : adjLists) {
+//            Collections.sort(adjList);
+//        }
+
         printList();
         for (int i = 0; i < adjLists.size(); i++) {
             if(!isVisited[i]){
@@ -102,7 +155,7 @@ public class MyGraph {
     /*
      * ПВГ, начатый из вершины v
      */
-    public void dfs(int v){
+    private void dfs(int v){
         isVisited[v] = true;
         history.add(v);
         for(int w : adjLists.get(v)){
@@ -192,7 +245,6 @@ public class MyGraph {
     public mxGraph getMyGraph() {
         return myGraph;
     }
-
 
     public Object[] getPoints() {
         return points;
