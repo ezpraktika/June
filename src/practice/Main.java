@@ -87,7 +87,7 @@ public class Main {
         /*
          * Панель, отвечающая за ввод ребер
          */
-        JPanel edgeLine = new JPanel();
+        final JPanel edgeLine = new JPanel();
         edgeLine.setLayout(new BoxLayout(edgeLine, BoxLayout.LINE_AXIS));
         final JTextField vert1 = new JTextField();
         vert1.setDocument(new MyPlainDocument());
@@ -382,7 +382,7 @@ public class Main {
                                                       g.topSorting();
                                                       pg.drawSortedGraph(g);
                                                       errorMessage.setText("Clockwise orientation");
-                                                      final JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
+                                                      JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
                                                               ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
                                                               ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                                                       scrollPane.setPreferredSize(new Dimension(750, 200));
@@ -453,6 +453,46 @@ public class Main {
                                      }
         );
 
+        restartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switch (state){
+                    case Making:
+                        g = null;
+                        number.setEnabled(true);
+                        number.setText("");
+                        vert1.setEnabled(false);
+                        vert2.setEnabled(false);
+                        createEdgeButton.setEnabled(false);
+                        startButton.setEnabled(false);
+                        importDateButton.setEnabled(true);
+                        restartButton.setEnabled(false);
+                        listOfEdges.setText("Edges:");
+                        errorMessage.setText("");
+                        break;
+
+                    case Sorting:
+                        g = null;
+                        pg.removeAll();
+                        pg.setStepNumber(0);
+                        f.repaint();
+                        state = State.Making;
+                        startButton.setText("Make graph");
+                        number.setEnabled(true);
+                        number.setText("");
+                        vert1.setEnabled(false);
+                        vert2.setEnabled(false);
+                        createEdgeButton.setEnabled(false);
+                        startButton.setEnabled(false);
+                        importDateButton.setEnabled(true);
+                        restartButton.setEnabled(false);
+                        listOfEdges.setText("Edges:");
+                        errorMessage.setText("");
+                        saveButton.setEnabled(false);
+
+                }
+            }
+        });
         f.add(tp);
 
         f.pack();
