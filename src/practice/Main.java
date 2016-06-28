@@ -201,7 +201,7 @@ public class Main {
         lab5.setAlignmentX(Component.CENTER_ALIGNMENT);
         headers.add(lab5);
 
-        headers.add(Box.createVerticalStrut(40));
+        headers.add(Box.createVerticalStrut(30));
 
         headers.setPreferredSize(new Dimension(50, 200));
 
@@ -367,6 +367,7 @@ public class Main {
                                                            startButton.setEnabled(true);
                                                            number.setEnabled(false);
                                                            importDateButton.setEnabled(false);
+                                                           restartButton.setEnabled(true);
                                                        } catch (IOException ex) {
                                                            errorMessage.setText("FILE ERROR: " + ex.getMessage());
                                                            listOfEdges.setText("Edges: ");
