@@ -9,9 +9,12 @@ import javafx.util.Pair;
 import javax.swing.*;
 
 import java.awt.*;
+
 import java.util.ArrayList;
 
-
+/**
+ * Класс, реализующий различные варианты изображения графа
+ */
 public class PaintGraph extends JPanel {
 
 
@@ -24,7 +27,7 @@ public class PaintGraph extends JPanel {
     /**
      * Фукнция для построения графа на основе списка смежности.
      *
-     * @param g
+     * @param g используемый граф
      */
     public void drawGraph(MyGraph g) {
         removeAll();
@@ -57,9 +60,9 @@ public class PaintGraph extends JPanel {
     }
 
     /**
-     * Построение фильнаного графа поиска в глубину.
+     * Построение финального графа поиска в глубину.
      *
-     * @param g
+     * @param g используемый граф
      */
     public void drawGraphWithDfs(MyGraph g) {
         removeAll();
@@ -97,7 +100,7 @@ public class PaintGraph extends JPanel {
     /**
      * Функция, которая строит изначальный граф и производит инициализацию для пошагового отображения поиска в глубину
      *
-     * @param g
+     * @param g используемый граф
      */
     public void drawGraphDfsWithSteps(final MyGraph g) {
 
@@ -146,9 +149,9 @@ public class PaintGraph extends JPanel {
     }
 
     /**
-     * Функция для построния очередного шага поиска в глубину
+     * Функция для построения очередного шага поиска в глубину
      *
-     * @param g
+     * @param g используемый граф
      */
     public void drawStep(MyGraph g) {
 
@@ -177,9 +180,9 @@ public class PaintGraph extends JPanel {
     }
 
     /**
-     * Функция построения топологически отсортированного графа.
+     * Функция построения топологически отсортированного графа
      *
-     * @param g
+     * @param g используемый граф
      */
 
     public void drawSortedGraph(MyGraph g) {

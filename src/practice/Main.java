@@ -1,7 +1,5 @@
 package practice;
 
-import javafx.stage.FileChooser;
-
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -10,16 +8,28 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-
+/**
+ * Основной класс, управляющий работой GUI и программы в целом
+ */
 public class Main {
 
+    // сортируемый граф
     private static MyGraph g;
-    private static PaintGraph pg;
-    private static State state;
-    private static JFileChooser fc;
-    private static JScrollPane scrollPane;
-    private static JTable table;
 
+    //панель для изображения графа
+    private static PaintGraph pg;
+
+
+    //enum-переменная для отображения состояния программы
+    private static State state;
+
+    private static JFileChooser fc;
+
+    /**
+     * making - стадия ввода данных о графе,
+     * searching - стадия построения дерева ПВГ,
+     * sorting - стадия выполнения сортировки, построения соответствующего графа и таблицы
+     */
     enum State {
         Making, Searching, Sorting
     }
@@ -32,8 +42,10 @@ public class Main {
         });
     }
 
-
-    private static void createAndShowGUI() {
+    /**
+     * Реализация графического интерфейса
+     */
+    public static void createAndShowGUI() {
 
         state = State.Making;
 
@@ -41,10 +53,6 @@ public class Main {
         JTabbedPane tp = new JTabbedPane();             //окно состоит из 2х вкладок
         JPanel firstPanel = new JPanel();               //на первой граф и кнопки
         final JPanel secondPanel = new JPanel();        //на второй таблица
-        secondPanel.setLayout(new BoxLayout(secondPanel, BoxLayout.PAGE_AXIS));
-
-        final JPanel secondUpPanel = new JPanel();           //верхняя половина второй страницы
-        secondUpPanel.setLayout(new BorderLayout(2, 0));
 
 
         /*
@@ -139,7 +147,6 @@ public class Main {
         errorMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
         errorMessage.setPreferredSize(new Dimension(200, 50));
 
-
         /*
          * Правая панель целиком
          */
@@ -150,7 +157,6 @@ public class Main {
         rightPanel.add(edgesScrollPane);
         rightPanel.add(errorMessage);
         rightPanel.add(Box.createVerticalStrut(200));
-
         rightPanel.setPreferredSize(new Dimension(200, 600));
 
         /*
@@ -199,17 +205,42 @@ public class Main {
 
         headers.setPreferredSize(new Dimension(50, 200));
 
-
-        table = new JTable();
+        /*
+         * Таблица
+         */
+        final JTable table = new JTable();
+        table.setEnabled(false);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        /*
+         * Панель, содержащая таблицу
+         */
+        final JScrollPane scrollPane;
         scrollPane=new JScrollPane(table,ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(750, 200));
         scrollPane.setColumnHeader(null);
-        //scrollPane=new JScrollPane();
+
+        /*
+         * Верхняя половина второй страницы
+         */
+        final JPanel secondUpPanel = new JPanel();
+        secondUpPanel.setLayout(new BorderLayout(2, 0));
         secondUpPanel.add(headers, BorderLayout.WEST);
         secondUpPanel.add(scrollPane, BorderLayout.CENTER);
+        secondUpPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel helpText = new JLabel("<html><font color = 8a8a8a size = 4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visited - номер вершины в порядке посещения<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;used - номер вершины в порядке использования<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;renumbered - перенумерованные вершины<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sorted - перегруппированные вершины</html>");
+        helpText.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        secondPanel.setLayout(new BoxLayout(secondPanel, BoxLayout.PAGE_AXIS));
         secondPanel.add(secondUpPanel);
+        secondPanel.add(helpText);
         secondPanel.add(Box.createVerticalStrut(450));
 
 
@@ -224,10 +255,13 @@ public class Main {
          * Listener'ы для кнопок и полей с первой страницы
          */
 
+        //поле ввода количества вершин
         number.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
 
+                //кнопку подтверждения можно нажать только
+                //когда поле ввода непусто и содержит число больше 1
                 if (number.getText().equals("") || number.getText().equals("1")) {
                     numOfVertexButton.setEnabled(false);
                 } else {
@@ -237,15 +271,19 @@ public class Main {
             }
         });
 
+        //поле ввода вершины, откуда будет идти ребро
         vert1.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
+                //кнопку подтверждения можно нажать только
+                //когда оба поля ввода непусты
                 if (!(vert1.getText().equals("") || vert2.getText().equals(""))) createEdgeButton.setEnabled(true);
                 else createEdgeButton.setEnabled(false);
                 super.keyReleased(e);
             }
         });
 
+        //аналогичный Listener для поля ввода вершины, куда будет идти ребро
         vert2.addKeyListener(vert1.getKeyListeners()[0]);
 
         //кнопка ввода количества вершин
@@ -253,9 +291,11 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                //получение количества вершин и построение графа
                 int num = Integer.parseInt(number.getText());
                 g = new MyGraph(num);
 
+                // lock/unlock кнопок и полей
                 vert1.setEnabled(true);
                 vert2.setEnabled(true);
                 restartButton.setEnabled(true);
@@ -272,22 +312,23 @@ public class Main {
         createEdgeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                //получение вершин ребра
                 int e1 = Integer.parseInt(vert1.getText());
                 int e2 = Integer.parseInt(vert2.getText());
                 vert1.setText("");
                 vert2.setText("");
 
                 try {
-
+                    //проверка корректности ребра
                     g.checkEdge(e1 - 1, e2 - 1);
                     listOfEdges.append("\n" + e1 + " - " + e2);
                     if (!errorMessage.getText().equals("")) errorMessage.setText("");
                     createEdgeButton.setEnabled(false);
 
                 } catch (IllegalArgumentException iae) {
-                    errorMessage.setText("ERROR: " + iae.getMessage());
+                    errorMessage.setText("ERROR: " + iae.getMessage()); //вывод сообщения об ошибке
                     createEdgeButton.setEnabled(false);
-                    System.out.println("ERROR: " + iae.getMessage());
                 }
 
             }
@@ -345,24 +386,26 @@ public class Main {
                                           @Override
                                           public void actionPerformed(ActionEvent e) {
                                               switch (Main.state) {
+
                                                   case Making:
+                                                      //lock
                                                       vert1.setEnabled(false);
                                                       vert2.setEnabled(false);
                                                       createEdgeButton.setEnabled(false);
                                                       restartButton.setEnabled(false);
                                                       errorMessage.setText("");
 
-                                                      pg.drawGraphDfsWithSteps(g);
+                                                      pg.drawGraphDfsWithSteps(g); //нарисовать исходный граф
                                                       startButton.setText("Start DFS");
-                                                      state = State.Searching;
-                                                      g.startDfs();
+                                                      state = State.Searching;  //следующая стадия
+                                                      g.startDfs();             //выполнить ПВГ
                                                       break;
 
                                                   case Searching:
                                                       if (pg.getStepNumber() == 0) {
                                                           startButton.setText("Next step");
                                                       }
-                                                      pg.drawStep(g);
+                                                      pg.drawStep(g); //пошаговая отрисовка ПВГ
                                                       if (pg.getStepNumber() >= g.getAdjLists().size()) {
                                                           startButton.setText("Sort");
                                                           state = State.Sorting;
@@ -370,18 +413,19 @@ public class Main {
                                                       break;
                                                   case Sorting:
 
-                                                      g.topSorting();
-                                                      pg.drawSortedGraph(g);
+                                                      g.topSorting();           //сортировка
+                                                      pg.drawSortedGraph(g);    //изображение отсортированного графа
                                                       errorMessage.setText("Clockwise orientation");
 
+                                                      //построение отсортированной таблицы
                                                       JTable help = g.makeJTable();
                                                       table.setModel(help.getModel());
                                                       table.setColumnModel(help.getColumnModel());
                                                       table.setRowHeight(help.getRowHeight());
-//                                                      table.getColumnModel();
 
-                                                      //scrollPane.revalidate();
                                                       scrollPane.setPreferredSize(new Dimension(750, 200));
+
+                                                      // lock/unlock
                                                       restartButton.setEnabled(true);
                                                       saveButton.setEnabled(true);
                                                       startButton.setEnabled(false);
@@ -389,7 +433,6 @@ public class Main {
                                               }
                                           }
                                       }
-
         );
 
 
@@ -437,17 +480,19 @@ public class Main {
                                                  }
                                              } catch (IOException ex) {
                                                  errorMessage.setText("FILE ERROR: " + ex.getMessage());
-                                                 //System.out.println(ex);
                                              }
 
                                          }
                                      }
         );
 
+        //кнопка сброса
         restartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switch (state){
+
+                    //если вызвана во время ввода данных
                     case Making:
                         g = null;
 
@@ -466,8 +511,9 @@ public class Main {
                         errorMessage.setText("");
                         break;
 
-                    case Sorting:
 
+                    //если вызвана после сортировки
+                    case Sorting:
                         g = null;
                         pg.removeAll();
                         pg.setStepNumber(0);
@@ -494,6 +540,7 @@ public class Main {
                 }
             }
         });
+
         f.add(tp);
 
         f.pack();
@@ -506,6 +553,8 @@ public class Main {
 
     /*
      * Класс для управления JTextField'ами
+     * В поля можно ввести только цифры
+     * Нельзя ввести первым символом ноль
      */
     static class MyPlainDocument extends PlainDocument {
 
@@ -519,6 +568,8 @@ public class Main {
             if (str.equals("0") && getLength() > 0) super.insertString(offs, str, a);
         }
     }
+
+
     private static String getFileExtension(File file) {
         String fileName = file.getName();
         // если в имени файла есть точка и она не является первым символом в названии файла
