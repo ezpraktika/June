@@ -414,7 +414,7 @@ public class Main {
                                                      if (!getFileExtension(file).equals("txt")) {
                                                          throw new IOException("WRONG TYPE OF FILE");
                                                      }
-                                                     if (!file.exists()){
+                                                     if (!file.exists()) {
                                                          file.createNewFile();
                                                      }
                                                      if (file.canWrite()) {
@@ -425,19 +425,18 @@ public class Main {
                                                          writer.write("Список смежности:");
                                                          writer.newLine();
                                                          for (int i = 0; i < g.getAdjLists().size(); i++) {
-                                                             writer.write(i + ": ");
+                                                             writer.write((i + 1) + ": ");
                                                              for (int j = 0; j < g.getAdjLists().get(i).size(); j++) {
-                                                                 writer.write(g.getAdjLists().get(i).get(j) + " ");
+                                                                 writer.write((g.getAdjLists().get(i).get(j) + 1) + " ");
                                                              }
                                                              writer.newLine();
                                                          }
                                                          writer.write("Вершины в отсортированном порядке: ");
-                                                         for(int i = 0; i < g.getTopSorted().size(); i++){
-                                                             writer.write((g.getTopSorted().get(i)+1) + " ");
+                                                         for (int i = 0; i < g.getTopSorted().size(); i++) {
+                                                             writer.write((g.getTopSorted().get(i) + 1) + " ");
                                                          }
                                                          writer.flush();
-                                                     }
-                                                     else{
+                                                     } else {
                                                          throw new IOException("CANT WRITE TO THIS FILE");
                                                      }
 
@@ -475,12 +474,13 @@ public class Main {
             if (str.equals("0") && getLength() > 0) super.insertString(offs, str, a);
         }
     }
+
     private static String getFileExtension(File file) {
         String fileName = file.getName();
         // если в имени файла есть точка и она не является первым символом в названии файла
-        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
             // то вырезаем все знаки после последней точки в названии файла, то есть ХХХХХ.txt -> txt
-            return fileName.substring(fileName.lastIndexOf(".")+1);
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
             // в противном случае возвращаем заглушку, то есть расширение не найдено
         else return "";
     }
