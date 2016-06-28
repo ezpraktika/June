@@ -24,6 +24,7 @@ public class MyGraph {
 
     private Color[] coloredVertex;
 
+
     enum Color {
         White, Grey, Black
     }

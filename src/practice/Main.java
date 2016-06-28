@@ -17,6 +17,8 @@ public class Main {
     private static PaintGraph pg;
     private static State state;
     private static JFileChooser fc;
+    private static JScrollPane scrollPane;
+    private static JTable table;
 
     enum State {
         Making, Searching, Sorting
@@ -198,6 +200,19 @@ public class Main {
         headers.setPreferredSize(new Dimension(50, 200));
 
 
+        table = new JTable();
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        scrollPane=new JScrollPane(table,ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(750, 200));
+        scrollPane.setColumnHeader(null);
+        //scrollPane=new JScrollPane();
+        secondUpPanel.add(headers, BorderLayout.WEST);
+        secondUpPanel.add(scrollPane, BorderLayout.CENTER);
+        secondPanel.add(secondUpPanel);
+        secondPanel.add(Box.createVerticalStrut(450));
+
+
         /*
          * Вкладки окна
          */
@@ -275,31 +290,6 @@ public class Main {
                     System.out.println("ERROR: " + iae.getMessage());
                 }
 
-//                g.createEdge(0, 1);
-//                g.createEdge(0, 2);
-//                g.createEdge(0, 3);
-//                g.createEdge(0, 5);
-//                g.createEdge(0, 6);
-//
-//                g.createEdge(2, 3);
-//
-//                g.createEdge(3, 4);
-//                g.createEdge(3, 5);
-//
-//                g.createEdge(4, 9);
-//
-//                g.createEdge(6, 4);
-//                g.createEdge(6, 9);
-//
-//                g.createEdge(7, 6);
-//
-//                g.createEdge(8, 7);
-//
-//                g.createEdge(9, 10);
-//                g.createEdge(9, 11);
-//                g.createEdge(9, 12);
-//
-//                g.createEdge(11, 12);
             }
         });
 
@@ -382,26 +372,26 @@ public class Main {
                                                       g.topSorting();
                                                       pg.drawSortedGraph(g);
                                                       errorMessage.setText("Clockwise orientation");
-                                                      JScrollPane scrollPane = new JScrollPane(g.makeJTable(),
-                                                              ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                                                              ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+                                                      JTable help = g.makeJTable();
+                                                      table.setModel(help.getModel());
+                                                      table.setColumnModel(help.getColumnModel());
+                                                      table.setRowHeight(help.getRowHeight());
+//                                                      table.getColumnModel();
+
+                                                      //scrollPane.revalidate();
                                                       scrollPane.setPreferredSize(new Dimension(750, 200));
-                                                      scrollPane.setColumnHeader(null);
-                                                      secondUpPanel.add(headers, BorderLayout.WEST);
-                                                      secondUpPanel.add(scrollPane, BorderLayout.CENTER);
-                                                      secondPanel.add(secondUpPanel);
-                                                      secondPanel.add(Box.createVerticalStrut(450));
                                                       restartButton.setEnabled(true);
                                                       saveButton.setEnabled(true);
                                                       startButton.setEnabled(false);
                                                       break;
                                               }
-
-//                pg.drawGraph(g);
                                           }
                                       }
 
         );
+
+
 
         //кнопка сохранения данных
         saveButton.addActionListener(new ActionListener() {
@@ -459,37 +449,47 @@ public class Main {
                 switch (state){
                     case Making:
                         g = null;
+
                         number.setEnabled(true);
                         number.setText("");
+
                         vert1.setEnabled(false);
                         vert2.setEnabled(false);
                         createEdgeButton.setEnabled(false);
+
                         startButton.setEnabled(false);
                         importDateButton.setEnabled(true);
                         restartButton.setEnabled(false);
+
                         listOfEdges.setText("Edges:");
                         errorMessage.setText("");
                         break;
 
                     case Sorting:
+
                         g = null;
                         pg.removeAll();
                         pg.setStepNumber(0);
                         f.repaint();
-                        state = State.Making;
-                        startButton.setText("Make graph");
+
                         number.setEnabled(true);
                         number.setText("");
+
                         vert1.setEnabled(false);
                         vert2.setEnabled(false);
                         createEdgeButton.setEnabled(false);
+
                         startButton.setEnabled(false);
+                        startButton.setText("Make graph");
                         importDateButton.setEnabled(true);
+                        saveButton.setEnabled(false);
                         restartButton.setEnabled(false);
+
                         listOfEdges.setText("Edges:");
                         errorMessage.setText("");
-                        saveButton.setEnabled(false);
 
+                        table.setModel(new JTable().getModel());
+                        state = State.Making;
                 }
             }
         });
