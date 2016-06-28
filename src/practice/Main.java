@@ -267,6 +267,7 @@ public class Main {
                     g.checkEdge(e1 - 1, e2 - 1);
                     listOfEdges.append("\n" + e1 + " - " + e2);
                     if (!errorMessage.getText().equals("")) errorMessage.setText("");
+                    createEdgeButton.setEnabled(false);
 
                 } catch (IllegalArgumentException iae) {
                     errorMessage.setText("ERROR: " + iae.getMessage());
@@ -412,7 +413,7 @@ public class Main {
 
                                                      File file = fc.getSelectedFile();
                                                      if (!getFileExtension(file).equals("txt")) {
-                                                         throw new IOException("WRONG TYPE OF FILE");
+                                                         throw new IOException("Wrong type of file");
                                                      }
                                                      if (!file.exists()) {
                                                          file.createNewFile();
@@ -436,13 +437,15 @@ public class Main {
                                                              writer.write((g.getTopSorted().get(i) + 1) + " ");
                                                          }
                                                          writer.flush();
-                                                     } else {
-                                                         throw new IOException("CANT WRITE TO THIS FILE");
+                                                     }
+                                                     else{
+                                                         throw new IOException("Can't write to this file");
                                                      }
 
                                                  }
                                              } catch (IOException ex) {
-                                                 System.out.println(ex);
+                                                 errorMessage.setText("FILE ERROR: " + ex.getMessage());
+                                                 //System.out.println(ex);
                                              }
 
                                          }
@@ -474,7 +477,6 @@ public class Main {
             if (str.equals("0") && getLength() > 0) super.insertString(offs, str, a);
         }
     }
-
     private static String getFileExtension(File file) {
         String fileName = file.getName();
         // если в имени файла есть точка и она не является первым символом в названии файла
