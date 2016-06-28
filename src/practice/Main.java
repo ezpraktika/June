@@ -271,6 +271,7 @@ public class Main {
 
                 } catch (IllegalArgumentException iae) {
                     errorMessage.setText("ERROR: " + iae.getMessage());
+                    createEdgeButton.setEnabled(false);
                     System.out.println("ERROR: " + iae.getMessage());
                 }
 
